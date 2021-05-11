@@ -1,0 +1,12 @@
+*.user
+
+.vs
+_ReSharper.Caches
+
+ShipCombatCore/bin
+ShipCombatCore/obj
+ShipCombatCore/Properties/launchSettings.json
+
+SpaceShipCombatSimulator/bin
+SpaceShipCombatSimulator/obj
+SpaceShipCombatSimulator/Properties/launchSettings.json
