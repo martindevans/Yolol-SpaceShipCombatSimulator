@@ -11,5 +11,7 @@
         Explosion,
 
         Asteroid,
+
+        VictoryMarker
     }
 }

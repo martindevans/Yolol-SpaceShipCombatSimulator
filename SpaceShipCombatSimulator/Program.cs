@@ -34,53 +34,16 @@ namespace SpaceShipCombatSimulator
             Parser.Default.ParseArguments<Options>(args).WithParsed(Run);
         }
 
-        private static Fleet? LoadFleet(string path)
-        {
-            if (!Directory.Exists(path))
-                return null;
-
-            var ships = new List<Ship>();
-            var data = new List<(string, string)>();
-            foreach (var subdirectory in Directory.GetDirectories(path))
-            {
-                var dirname = Path.GetFileName(subdirectory);
-                if (dirname.Equals("data", StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var file in Directory.GetFiles(subdirectory, "*.txt"))
-                    {
-                        var name = Path.GetFileNameWithoutExtension(file);
-                        var content = File.ReadAllText(file);
-                        data.Add(($":{name}", content));
-                    }
-                }
-                else
-                {
-                    var programs = new List<Yolol.Grammar.AST.Program>();
-                    foreach (var file in Directory.GetFiles(subdirectory, "*.yolol"))
-                    {
-                        var result = Yolol.Grammar.Parser.ParseProgram(File.ReadAllText(file));
-                        if (!result.IsOk)
-                            Console.WriteLine(result.Err);
-                        else
-                            programs.Add(result.Ok);
-                    }
-                    ships.Add(new Ship(programs));
-                }
-            }
-
-            return new Fleet(ships, data);
-        }
-
         private static void Run(Options options)
         {
-            var a = LoadFleet(options.PathA);
+            var a = Fleet.TryLoad(options.PathA);
             if (a == null)
             {
                 Console.WriteLine("Failed to load fleet A");
                 return;
             }
 
-            var b = LoadFleet(options.PathB);
+            var b = Fleet.TryLoad(options.PathB);
             if (b == null)
             {
                 Console.WriteLine("Failed to load fleet B");

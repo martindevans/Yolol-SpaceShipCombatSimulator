@@ -17,6 +17,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private float _cooldownTime = CooldownTime;
 
 #pragma warning disable 8618
+        private Property<uint> _team;
+
         private Property<YololContext> _context;
 
         private Property<Vector3> _position;
@@ -34,6 +36,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
+            _team = context.CreateProperty(PropertyNames.TeamOwner);
+
             _context = context.CreateProperty(PropertyNames.YololContext);
 
             _position = context.CreateProperty(PropertyNames.Position);
@@ -71,7 +75,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             var result = Parser.ParseProgram(code);
             var program = result.IsOk ? result.Ok : new Program(new Line[0]);
-            Owner.Scene?.Add(new MissileEntity().Create(Guid.NewGuid().ToString(), _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
+            Owner.Scene?.Add(new MissileEntity().Create(Guid.NewGuid().ToString(), _team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
             _trigger.Value--;
             _ammo.Value--;
             _ammoVar.Value = _ammo.Value;

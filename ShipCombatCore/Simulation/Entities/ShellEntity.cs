@@ -13,6 +13,7 @@ namespace ShipCombatCore.Simulation.Entities
         {
             AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.Shell);
+            AddBehaviour<TeamMember>();
             
             // Explode after timeout or when taking any damage
             AddBehaviour<LifetimeLimit>();
@@ -34,9 +35,11 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordTransformPosition>();
         }
 
-        public Entity Create(float fuse, Vector3 position, Vector3 velocity)
+        public Entity Create(float fuse, uint team, Vector3 position, Vector3 velocity)
         {
             var e = base.Create();
+
+            e.GetProperty(PropertyNames.TeamOwner)!.Value = team;
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
             e.GetProperty(PropertyNames.Velocity)!.Value = velocity;

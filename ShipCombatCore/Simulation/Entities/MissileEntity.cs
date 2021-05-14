@@ -14,6 +14,7 @@ namespace ShipCombatCore.Simulation.Entities
         {
             AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.Missile);
+            AddBehaviour<TeamMember>();
 
             // Physics
             AddBehaviour<Integrate>();
@@ -47,11 +48,12 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordFuelLitersInTank>();
         }
 
-        public Entity Create(string name, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, Program program)
+        public Entity Create(string name, uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, Program program)
         {
             var e = base.Create();
 
             e.GetProperty(PropertyNames.UniqueName)!.Value = name;
+            e.GetProperty(PropertyNames.TeamOwner)!.Value = team;
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
             e.GetProperty(PropertyNames.Velocity)!.Value = velocity;

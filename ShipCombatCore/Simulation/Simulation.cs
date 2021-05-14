@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MathHelperRedux;
 using Myre.Entities;
 using ShipCombatCore.Model;
 using ShipCombatCore.Name;
+using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 using ShipCombatCore.Simulation.Entities;
 
@@ -22,7 +24,7 @@ namespace ShipCombatCore.Simulation
             _scene = BuildScene(red, blue);
         }
 
-        private static void BuildFleet(Scene scene, Fleet fleet, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
+        private static void BuildFleet(Scene scene, Fleet fleet, uint team, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
         {
             var shipEntity = new SpaceShipEntity();
 
@@ -40,7 +42,7 @@ namespace ShipCombatCore.Simulation
                 offset *= 250;
 
                 // Spawn ship entity
-                var e = shipEntity.Create(name, middle + offset, Vector3.Zero, forward, new Vector3(0, 0, 0), ship.Programs);
+                var e = shipEntity.Create(name, team, middle + offset, Vector3.Zero, forward, new Vector3(0, 0, 0), ship.Programs);
                 scene.Add(e);
 
                 // Load up data
@@ -67,8 +69,8 @@ namespace ShipCombatCore.Simulation
 
             var r = new Random();
             var names = new HashSet<string>();
-            BuildFleet(scene, red, new Vector3(0, 0, 3000), Quaternion.Identity, r, names);
-            BuildFleet(scene, blue, new Vector3(0, 0, -3000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
+            BuildFleet(scene, red, 0, new Vector3(0, 0, 3000), Quaternion.Identity, r, names);
+            BuildFleet(scene, blue, 1, new Vector3(0, 0, -3000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
 
             return scene;
         }
@@ -78,18 +80,31 @@ namespace ShipCombatCore.Simulation
             var start = DateTime.UtcNow;
 
             var recorder = _scene.GetManager<RecorderMaster.Manager>();
+            var teams = _scene.GetManager<TeamMember.Manager>();
 
+            var dt = (float)TimeSpan.FromMilliseconds(MillisecondsPerTick).TotalSeconds;
+            uint? winner = null;
             uint ts = 0;
             for (ulong i = 0; i < SimulationDuration; i++)
             {
-                _scene.Update((float)TimeSpan.FromMilliseconds(MillisecondsPerTick).TotalSeconds);
+                _scene.Update(dt);
                 ts += MillisecondsPerTick;
                 recorder.Record(ts);
+
+                var ships = teams.Behaviours.Where(a => a.Type == EntityType.SpaceBattleShip).GroupBy(a => a.Team).ToList();
+                if (ships.Count == 1)
+                {
+                    winner = ships[0].Key;
+                    _scene.Add(new VictoryMarkerEntity().Create(ships[0].Key));
+                    recorder.Record(ts);
+                    break;
+                }
             }
 
             return new Report.Report(
                 DateTime.UtcNow - start,
-                recorder.Recordings
+                recorder.Recordings,
+                winner
             );
         }
     }

@@ -13,6 +13,7 @@ namespace ShipCombatCore.Simulation.Entities
         {
             AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.SpaceBattleShip);
+            AddBehaviour<TeamMember>();
 
             // Physics
             AddBehaviour<Integrate>();
@@ -51,11 +52,12 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordCosmicRadiation>();
         }
 
-        public Entity Create(string name, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, IReadOnlyList<Yolol.Grammar.AST.Program> programs)
+        public Entity Create(string name, uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, IReadOnlyList<Yolol.Grammar.AST.Program> programs)
         {
             var e = base.Create();
 
             e.GetProperty(PropertyNames.UniqueName)!.Value = name;
+            e.GetProperty(PropertyNames.TeamOwner)!.Value = team;
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
             e.GetProperty(PropertyNames.Velocity)!.Value = velocity;

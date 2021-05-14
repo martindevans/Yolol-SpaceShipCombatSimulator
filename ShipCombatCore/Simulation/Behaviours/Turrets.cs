@@ -74,6 +74,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             private FloatCurve _bearingCurve;
             private FloatCurve _elevationCurve;
 
+            private Property<uint> _team;
+
             private Property<Vector3> _position;
             private Property<Vector3> _velocity;
             private Property<Quaternion> _orientation;
@@ -92,6 +94,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             public void CreateProperties(Entity.ConstructionContext context)
             {
+                _team = context.CreateProperty(PropertyNames.TeamOwner);
+
                 _position = context.CreateProperty(PropertyNames.Position);
                 _velocity = context.CreateProperty(PropertyNames.Velocity);
                 _orientation = context.CreateProperty(PropertyNames.Orientation);
@@ -135,7 +139,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                     // Work out what the fuse setting is for this gun and then spawn a shell
                     var fuseVar = ctx.Get($":gun_fuse_{_index}");
                     var fuse = Math.Clamp(fuseVar.Value.Type == Yolol.Execution.Type.Number ? (float)fuseVar.Value.Number : 0, MinFuse, MaxFuse);
-                    scene.Add(new ShellEntity().Create(fuse, _position.Value, _velocity.Value + GunDirection() * ShellSpeed));
+                    scene.Add(new ShellEntity().Create(fuse, _team.Value, _position.Value, _velocity.Value + GunDirection() * ShellSpeed));
                 }
             }
 
