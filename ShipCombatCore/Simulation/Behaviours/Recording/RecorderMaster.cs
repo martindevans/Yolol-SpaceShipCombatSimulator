@@ -13,7 +13,10 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
     {
         public IEnumerable<ICurve> Curves => Owner.GetBehaviours<IRecorder>().SelectMany(a => a.Curves);
 
+#pragma warning disable 8618
         public string ID { get; set; }
+#pragma warning restore 8618
+
         public EntityType Type { get; set; }
 
         public override void Initialise(INamedDataProvider? initialisationData)

@@ -14,7 +14,9 @@ namespace ShipCombatCore.Simulation.Entities
             AddProperty(PropertyNames.EntityType, EntityType.VictoryMarker);
 
             AddBehaviour<VictoryMarker>();
+
             AddBehaviour<RecorderMaster>();
+            AddBehaviour<RecordTransformPosition>();
         }
 
         public Entity Create(uint winner)

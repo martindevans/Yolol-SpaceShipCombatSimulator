@@ -39,14 +39,14 @@ namespace SpaceShipCombatSimulator
             var a = Fleet.TryLoad(options.PathA);
             if (a == null)
             {
-                Console.WriteLine("Failed to load fleet A");
+                Console.WriteLine("**Failed to load fleet A**");
                 return;
             }
 
             var b = Fleet.TryLoad(options.PathB);
             if (b == null)
             {
-                Console.WriteLine("Failed to load fleet B");
+                Console.WriteLine("**Failed to load fleet B**");
                 return;
             }
 

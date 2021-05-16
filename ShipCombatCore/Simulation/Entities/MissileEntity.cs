@@ -23,7 +23,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             // Collision
             AddBehaviour<SphereColliderSecondary>();
-            AddProperty(PropertyNames.SphereColliderRadius, 1);
+            AddProperty(PropertyNames.SphereRadius, 1);
 
             // Explode after taking any damage
             AddBehaviour<DamageInstantlyKills>();
@@ -39,6 +39,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<Engine>();
             AddBehaviour<MomentumWheels>();
             AddBehaviour<FixedActiveRadarScannerDevice>();
+            AddBehaviour<Radio>();
 
             // Recording
             AddBehaviour<RecorderMaster>();

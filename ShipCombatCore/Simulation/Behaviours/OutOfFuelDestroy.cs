@@ -13,23 +13,11 @@ namespace ShipCombatCore.Simulation.Behaviours
     {
 #pragma warning disable 8618
         private Property<float> _fuel;
-
-        private Property<string> _name;
-        private Property<Vector3> _position;
-        private Property<Vector3> _velocity;
-        private Property<Quaternion> _orientation;
-        private Property<Vector3> _angularVelocity;
 #pragma warning restore 8618
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _fuel = context.CreateProperty(PropertyNames.FuelLitersInTank);
-
-            _name = context.CreateProperty(PropertyNames.UniqueName);
-            _position = context.CreateProperty(PropertyNames.Position);
-            _velocity = context.CreateProperty(PropertyNames.Velocity);
-            _orientation = context.CreateProperty(PropertyNames.Orientation);
-            _angularVelocity = context.CreateProperty(PropertyNames.AngularVelocity);
 
             base.CreateProperties(context);
         }

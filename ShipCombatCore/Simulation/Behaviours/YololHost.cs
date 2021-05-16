@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
-using Yolol.Grammar;
 using Yolol.Grammar.AST;
 using Yolol.IL.Compiler;
 using Yolol.IL.Extensions;
@@ -12,13 +11,16 @@ namespace ShipCombatCore.Simulation.Behaviours
 {
     public class YololContext
     {
+        private const int MaxStringLength = 10000;
+        private const int MaxMemoryUsage = 1000000;
+
         private class CompiledProgramState
         {
             public int ProgramCounter { get; private set; }
             public IReadOnlyList<Func<ArraySegment<Value>, ArraySegment<Value>, int>> Lines { get; }
 
             public InternalsMap InternalsMap { get; }
-            private readonly Value[] _internals;
+            public Value[] Internals { get; }
 
             private CompiledProgramState(IReadOnlyList<Func<ArraySegment<Value>, ArraySegment<Value>, int>> lines, InternalsMap internals)
             {
@@ -26,8 +28,8 @@ namespace ShipCombatCore.Simulation.Behaviours
                 ProgramCounter = 0;
 
                 InternalsMap = internals;
-                _internals = new Value[InternalsMap.Count];
-                Array.Fill(_internals, (Number)0);
+                Internals = new Value[InternalsMap.Count];
+                Array.Fill(Internals, (Number)0);
             }
 
             public void Tick(Value[] externals)
@@ -38,7 +40,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                     ProgramCounter = 0;
                 if (ProgramCounter < 0)
                     ProgramCounter = 0;
-                ProgramCounter = Lines[ProgramCounter](_internals, externals) - 1;
+                ProgramCounter = Lines[ProgramCounter](Internals, externals) - 1;
             }
 
             public static CompiledProgramState Compile(Program program, ExternalsMap externalsMap)
@@ -71,6 +73,47 @@ namespace ShipCombatCore.Simulation.Behaviours
         {
             foreach (var state in _compiled)
                 state.Tick(_externals);
+
+            // Check memory usage of externals. Trim strings which are over the max length limit
+            var memory = 0;
+            for (var i = 0; i < _externals.Length; i++)
+                memory += CheckMemory(ref _externals[i]);
+
+            // Check memory usage of internals of each chip. Trim string which are over the limit.
+            var maxMemChipIdx = -1;
+            var maxMemChipUsage = 0;
+            for (var c = 0; c < _compiled.Count; c++)
+            {
+                var m = 0;
+                for (var i = 0; i < _compiled[c].Internals.Length; i++)
+                    m += CheckMemory(ref _compiled[c].Internals[i]);
+                memory += m;
+                if (m > maxMemChipUsage)
+                {
+                    maxMemChipIdx = c;
+                    maxMemChipUsage = m;
+                }
+            }
+
+            // If total ship memory usage is over the limit delete the chip using the most memory
+            if (memory > MaxMemoryUsage && maxMemChipIdx >= 0)
+                _compiled.RemoveAt(maxMemChipIdx);
+        }
+
+        private static int CheckMemory(ref Value value)
+        {
+            if (value.Type == Yolol.Execution.Type.String)
+            {
+                if (value.String.Length > MaxStringLength)
+                {
+                    value = "";
+                    return 0;
+                }
+                else
+                    return value.String.Length;
+            }
+            else
+                return 1;
         }
 
         public YololVariable Get(string name)
@@ -124,18 +167,24 @@ namespace ShipCombatCore.Simulation.Behaviours
         : ProcessBehaviour
     {
         private Property<YololContext>? _context;
+        private Property<string>? _name;
 
         private double _accumulatedTime;
-
+        
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _context = context.CreateProperty(PropertyNames.YololContext);
+            _name = context.CreateProperty(PropertyNames.UniqueName);
 
             base.CreateProperties(context);
         }
 
         protected override void Update(float elapsedTime)
         {
+            var name = _context?.Value?.Get(":name");
+            if (name != null && _name?.Value != null)
+                name.Value = _name.Value;
+
             _accumulatedTime += elapsedTime * 1000;
             while (_accumulatedTime > 1)
             {

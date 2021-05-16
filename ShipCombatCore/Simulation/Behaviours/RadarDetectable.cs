@@ -14,17 +14,20 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Vector3> _position;
         private Property<string> _uniqueId;
         private Property<EntityType> _type;
+        private Property<float> _radius;
 #pragma warning restore 8618
 
         public Vector3 Position => _position.Value;
         public string ID => _uniqueId.Value!;
         public EntityType Type => _type.Value;
+        public float Radius => _radius.Value;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _position = context.CreateProperty(PropertyNames.Position);
             _uniqueId = context.CreateProperty(PropertyNames.UniqueName);
             _type = context.CreateProperty(PropertyNames.EntityType);
+            _radius = context.CreateProperty(PropertyNames.SphereRadius);
 
             base.CreateProperties(context);
         }

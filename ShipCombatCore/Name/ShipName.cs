@@ -53,6 +53,8 @@ namespace ShipCombatCore.Name
             "Everything I say Is A Lie",
             "The Mind Killer",
             "A sufficiently advanced technology",
+            "Worth The Wait",
+            "Worth The Weight",
         };
 
         private static readonly IReadOnlyList<string> String1 = new[] {
@@ -63,6 +65,8 @@ namespace ShipCombatCore.Name
             "Danger", "Anger", "Combat", "Savage",
             "Jovian", "Lunar", "Martian", "Terran",
             "Warp", "Immaterium", "Aether", "Alien",
+            "Wild", "Feral", "Ferocious", "Savage", "Barbaric", "Fierce", "Rampant", "Vicious",
+            "Kind", "Tame", "Gentle", "Orderly", "Delicate",
             "Nyarlathothep's", "Yolathothep's", "Dude's", "Rad's", "Matrix's", "Nyefari's", "Pyry's", "Scoundrel's",
             "Zijkhal's", "Opux's", "Graham's", "Drelnoch's", "Azurethi's", "Hourd's", "Ayfid's", "Chronojam's",
             "Genius",
@@ -86,7 +90,11 @@ namespace ShipCombatCore.Name
             "Optimist", "Pessimist",
             "Shortfall", "Demise",
             "Gambit", "Artifice", "Ploy", "Ruse", "Agent",
-            "Jam", "Marmalade", "Jelly", "Confection", "Extract", "Spread", "Marmite"
+            "Jam", "Marmalade", "Jelly", "Confection", "Extract", "Spread", "Marmite",
+            "Truth",
+            "Heart",
+            "Charity",
+            "Ratio",
         };
 
         private static readonly IReadOnlyList<string> ShipClass = new[] {
@@ -97,7 +105,7 @@ namespace ShipCombatCore.Name
         {
             Weighted(1f, TwoWords),
             Weighted(0.1f, PrefixClass(TwoWords)),
-            Weighted(0.05f, Premade),
+            Weighted(0.1f, Premade),
             //Weighted(0.01f, PrefixClass(Premade)),
             //Weighted(0.1f, IdCode),
             //Weighted(0.1f, r => PrefixClass(r, IdCode)),

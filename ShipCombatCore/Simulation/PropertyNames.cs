@@ -44,6 +44,6 @@ namespace ShipCombatCore.Simulation
 
         public static readonly TypedName<uint> MissileLauncherAmmo = new("missile_launcher_ammo");
 
-        public static readonly TypedName<float> SphereColliderRadius = new("sphere_collider_radius");
+        public static readonly TypedName<float> SphereRadius = new("sphere_collider_radius");
     }
 }

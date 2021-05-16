@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using MathHelperRedux;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using ShipCombatCore.Geometry;
 using ShipCombatCore.Helpers;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 using ShipCombatCore.Simulation.Report.Curves;
@@ -98,7 +100,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _angle.Value = angle;
 
             // Find entities along the beam
-            var entities = FindEntities(_direction.Value, (float)Math.Cos(angle * angle.ToRadians()), range);
+            var entities = FindEntities(_direction.Value, angle.ToRadians());
 
             // Output results
             var count = ctx.Get(":radar_count");
@@ -107,14 +109,12 @@ namespace ShipCombatCore.Simulation.Behaviours
             var id = ctx.Get(":radar_out_id");
             var type = ctx.Get(":radar_out_type");
             var dist = ctx.Get(":radar_out_dist");
-            var dot = ctx.Get(":radar_out_dot");
             
             var idx = (int)YololValue.Number(ctx.Get(":radar_idx").Value, -1, int.MaxValue);
             if (idx < 0 || idx >= entities.Count)
             {
                 id.Value = "";
                 dist.Value = 0;
-                dot.Value = 0;
                 type.Value = "";
                 _target.Value = Vector3.Zero;
             }
@@ -124,51 +124,101 @@ namespace ShipCombatCore.Simulation.Behaviours
                 id.Value = e.Detectable.ID;
                 type.Value = e.Detectable.Type.ToString();
                 dist.Value = (Number)e.Dist;
-                dot.Value = (Number)e.Dot;
                 _target.Value = e.Detectable.Position;
             }
         }
 
-        private List<RadarReturn> FindEntities(Vector3 beamDirWorld, float dotMin, float rangeMax)
+        private List<RadarReturn> FindEntities(Vector3 beamDirWorld, float beamAngle)
         {
             var l = new List<RadarReturn>();
             if (Owner.Scene == null)
                 return l;
 
+            var sinAngle = (float)Math.Sin(beamAngle);
+            var beam = new HalfRay3(_position.Value, beamDirWorld);
+
+            var circles = new List<RadarCandidate>();
             foreach (var item in Owner.Scene.GetManager<RadarDetectable.Manager>().Detectable)
             {
+                // Don't detect self
                 if (ReferenceEquals(item.Owner, Owner))
                     continue;
 
-                var vec = item.Position - _position.Value;
-                var dist = vec.Length();
-                if (dist > rangeMax)
-                    continue;
-                vec /= dist;
-
-                var dot = Vector3.Dot(beamDirWorld, vec);
-                if (dot < dotMin)
+                // Skip items which are too close
+                if (Vector3.DistanceSquared(item.Position, _position.Value) < 1)
                     continue;
 
-                l.Add(new RadarReturn(item, dist, dot));
+                // Skip items which are too far from the beam
+                var pointOnBeam = beam.ClosestPoint(item.Position, out var distanceAlongBeam);
+                var distFromBeam = Vector3.Distance(pointOnBeam, item.Position);
+
+                // Calculate beam width at the given distance
+                var beamWidth = sinAngle * distanceAlongBeam;
+
+                // Check if the circle of the item intersects the beam
+                if (distFromBeam - item.Radius - beamWidth > 0)
+                    continue;
+
+                // Project point onto plane and store projected circle in list
+                // Scale down radius of circle by distance (i.e. width of the beam)
+                circles.Add(new RadarCandidate(
+                    Vector3.Normalize(item.Position - _position.Value),
+                    MathF.Asin(item.Radius / Vector3.Distance(item.Position, _position.Value)),
+                    distanceAlongBeam,
+                    item
+                ));
             }
 
-            // Sort by distance, so index 0 is always the closest item
-            l.Sort((a, b) => a.Dist.CompareTo(b.Dist));
+            // Sort by distance before removing circles obscured by closer things
+            circles.Sort((a, b) => a.Distance.CompareTo(b.Distance));
+
+            // Remove circles which are totally obscured by earlier circles
+            for (var i = 0; i < circles.Count; i++)
+            {
+                var c = circles[i];
+                for (var j = circles.Count - 1; j > i; j--)
+                    if (Obscures(c, circles[j]))
+                        circles.RemoveAt(j);
+            }
+
+            // Convert into radar return objects
+            l.AddRange(circles.Select(a => new RadarReturn(a.Item, a.Distance)));
 
             return l;
+        }
+
+        private bool Obscures(RadarCandidate close, RadarCandidate far)
+        {
+            var coneClose = new Cone(close.Direction, close.Angle);
+            var coneFar = new Cone(far.Direction, far.Angle);
+
+            return coneClose.Contains(coneFar);
+        }
+
+        private readonly struct RadarCandidate
+        {
+            public readonly Vector3 Direction;
+            public readonly float Angle;
+            public readonly float Distance;
+            public readonly RadarDetectable Item;
+
+            public RadarCandidate(Vector3 direction, float angle, float distance, RadarDetectable item)
+            {
+                Direction = direction;
+                Angle = angle;
+                Distance = distance;
+                Item = item;
+            }
         }
 
         private readonly struct RadarReturn
         {
             public float Dist { get; }
-            public float Dot { get; }
             public RadarDetectable Detectable { get; }
 
-            public RadarReturn(RadarDetectable detectable, float dist, float dot)
+            public RadarReturn(RadarDetectable detectable, float dist)
             {
                 Dist = dist;
-                Dot = dot;
                 Detectable = detectable;
             }
         }

@@ -29,11 +29,20 @@ namespace ShipCombatCore.Model
             if (!File.Exists(path) || Path.GetExtension(path) != ".zip")
                 return null;
 
+            return TryLoadZip(ZipFile.OpenRead(path));
+        }
+
+        public static Fleet? TryLoadZip(ZipArchive archive)
+        {
             var tmp = Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString()));
             try
             {
-                ZipFile.ExtractToDirectory(path, tmp.FullName);
-                return TryLoadDirectory(tmp.FullName);
+                archive.ExtractToDirectory(tmp.FullName);
+                var subdir = Directory.GetDirectories(tmp.FullName).FirstOrDefault();
+                if (subdir == null)
+                    return null;
+
+                return TryLoadDirectory(subdir);
             }
             finally
             {

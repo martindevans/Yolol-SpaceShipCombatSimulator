@@ -38,7 +38,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             e.GetProperty(PropertyNames.ExtraMass)!.Value = 300000f;
 
-            e.GetProperty(PropertyNames.SphereColliderRadius)!.Value = radius;
+            e.GetProperty(PropertyNames.SphereRadius)!.Value = radius;
 
             return e;
         }

@@ -9,14 +9,14 @@ namespace ShipCombatCore.Simulation.Report
     public class Report
     {
         private readonly IEnumerable<RecorderMaster> _recordings;
-        private readonly uint? _winner;
 
         public TimeSpan RealtimeDuration { get; }
+        public uint? Winner { get; }
 
         public Report(TimeSpan realtimeDuration, IEnumerable<RecorderMaster> recordings, uint? winner)
         {
             _recordings = recordings;
-            _winner = winner;
+            Winner = winner;
             RealtimeDuration = realtimeDuration;
         }
 
@@ -24,7 +24,7 @@ namespace ShipCombatCore.Simulation.Report
         {
             return $"Real Time Elapsed: {RealtimeDuration.TotalMilliseconds}ms\n" +
                    $"Recorded Entities ({_recordings.Count()}):\n" + 
-                   $"Winner: {_winner?.ToString() ?? "Draw"}\n" +
+                   $"Winner: {Winner?.ToString() ?? "Draw"}\n" +
                    string.Join("\n", _recordings.Select(r => $" - {r.ID} ({r.Type})"));
         }
 
@@ -33,7 +33,7 @@ namespace ShipCombatCore.Simulation.Report
             writer.WriteStartObject();
             {
                 writer.WritePropertyName("Winner");
-                writer.WriteValue(_winner);
+                writer.WriteValue(Winner);
 
                 writer.WritePropertyName("Entities");
                 writer.WriteStartArray();

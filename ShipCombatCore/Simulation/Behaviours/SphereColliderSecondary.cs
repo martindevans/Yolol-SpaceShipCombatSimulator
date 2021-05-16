@@ -20,7 +20,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
-            _radius = context.CreateProperty(PropertyNames.SphereColliderRadius);
+            _radius = context.CreateProperty(PropertyNames.SphereRadius);
             _position = context.CreateProperty(PropertyNames.Position);
 
             base.CreateProperties(context);

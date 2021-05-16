@@ -17,6 +17,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<Integrate>();
             AddBehaviour<SpaceDrag>();
             AddBehaviour<RadarDetectable>();
+            AddProperty(PropertyNames.SphereRadius, 50);
 
             // Recording
             AddBehaviour<RecorderMaster>();

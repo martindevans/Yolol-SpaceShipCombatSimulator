@@ -25,7 +25,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             // Collision
             AddBehaviour<SphereColliderSecondary>();
-            AddProperty(PropertyNames.SphereColliderRadius, 1);
+            AddProperty(PropertyNames.SphereRadius, 1);
 
             // Radar
             AddBehaviour<RadarDetectable>();
