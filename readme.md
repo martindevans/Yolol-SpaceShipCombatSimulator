@@ -134,7 +134,12 @@ The space ship has large turret mounted guns capable of firing nuclear warheads,
 
 ### Missile Launcher
 
-todo
+The space ship has a missile launcher with a limit number of missiles. Missiles are capable of independent flight and can detonate themselves instantly.
+
+ - `:missile_ammo` - the number of unfired missiles remaining.
+ - `:missile_code` - the code to execute on the next missile to fire.
+ - `:missile_ready` - indicates if the missile launcher is ready to fire.
+ - `:missile_trigger` - sets how many missiles should be fired. Every time a missile is fired this value will decrease by one.
 
 ### Radar Scanner
 
@@ -142,7 +147,10 @@ todo
 
 ### Radio
 
-todo
+Every team has a perfectly secure radio channel which can transmit strings - there is no way for enemies to eavesdrop or even interfere with radio messages. However, if two allied ships transmit at the same time the message will be scrambled.
+
+ - `:radio_send` - if this field is a non-empty string it will be transmitted.
+ - `:radio_recv` - the message sent last tick is _added_ to this field (string concatenation) every tick.
 
 ### Warhead
 
