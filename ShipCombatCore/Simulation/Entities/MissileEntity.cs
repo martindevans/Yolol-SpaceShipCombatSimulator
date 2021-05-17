@@ -34,7 +34,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<YololHost>();
             AddBehaviour<ClockDevice>();
             AddBehaviour<GyroscopeDevice>();
-            AddBehaviour<AccelerometerDevice>();
+            AddBehaviour<PositioningDevice>();
             AddBehaviour<FuelTank>();
             AddBehaviour<Engine>();
             AddBehaviour<MomentumWheels>();
