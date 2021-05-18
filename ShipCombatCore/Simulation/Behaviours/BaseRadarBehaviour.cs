@@ -45,6 +45,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             }
         }
 
+        private List<RadarReturn> _lastScanData = new List<RadarReturn>();
+
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _position = context.CreateProperty(PropertyNames.Position);
@@ -89,29 +91,35 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (ctx == null)
                 return;
 
-            var elevation = Elevation(ctx);
-            var bearing = Bearing(ctx);
-            var angle = BeamAngle(ctx);
-            var range = BeamRange(ctx);
+            var trigger = ctx.Get(":radar_trigger");
+            if (trigger.Value.ToBool())
+            {
+                trigger.Value = 0;
 
-            // Update properties (and thus curves)
-            _direction.Value = RadarDirection(elevation, bearing);
-            _range.Value = range;
-            _angle.Value = angle;
+                var elevation = Elevation(ctx);
+                var bearing = Bearing(ctx);
+                var angle = BeamAngle(ctx);
+                var range = BeamRange(ctx);
 
-            // Find entities along the beam
-            var entities = FindEntities(_direction.Value, angle.ToRadians());
+                // Update properties (and thus curves)
+                _direction.Value = RadarDirection(elevation, bearing);
+                _range.Value = range;
+                _angle.Value = angle;
+
+                // Find entities along the beam
+                _lastScanData = FindEntities(_direction.Value, angle.ToRadians());
+            }
 
             // Output results
             var count = ctx.Get(":radar_count");
-            count.Value = (Number)entities.Count;
+            count.Value = (Number)_lastScanData.Count;
 
             var id = ctx.Get(":radar_out_id");
             var type = ctx.Get(":radar_out_type");
             var dist = ctx.Get(":radar_out_dist");
             
             var idx = (int)YololValue.Number(ctx.Get(":radar_idx").Value, -1, int.MaxValue);
-            if (idx < 0 || idx >= entities.Count)
+            if (idx < 0 || idx >= _lastScanData.Count)
             {
                 id.Value = "";
                 dist.Value = 0;
@@ -120,7 +128,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             }
             else
             {
-                var e = entities[idx];
+                var e = _lastScanData[idx];
                 id.Value = e.Detectable.ID;
                 type.Value = e.Detectable.Type.ToString();
                 dist.Value = (Number)e.Dist;
@@ -187,7 +195,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             return l;
         }
 
-        private bool Obscures(RadarCandidate close, RadarCandidate far)
+        private static bool Obscures(RadarCandidate close, RadarCandidate far)
         {
             var coneClose = new Cone(close.Direction, close.Angle);
             var coneFar = new Cone(far.Direction, far.Angle);
