@@ -16,6 +16,7 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class Turrets
         : ProcessBehaviour, IRecorder
     {
+        private readonly ShellEntity _shellFactory;
         private const ushort TurretCount = 4;
 
         private const float MinElevation = 0;
@@ -37,12 +38,19 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<YololContext> _context;
 #pragma warning restore 8618
 
+#pragma warning disable 8618
+        public Turrets(ShellEntity shellFactory)
+#pragma warning restore 8618
+        {
+            _shellFactory = shellFactory;
+        }
+
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _context = context.CreateProperty(PropertyNames.YololContext);
 
             for (var i = 0; i < TurretCount; i++)
-                _turrets.Add(new Turret(i));
+                _turrets.Add(new Turret(_shellFactory, i));
 
             foreach (var turret in _turrets)
                 turret.CreateProperties(context);
@@ -69,6 +77,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private class Turret
             : IRecorder
         {
+            private readonly ShellEntity _shellFactory;
             private readonly int _index;
 
             private FloatCurve _bearingCurve;
@@ -86,9 +95,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             private float _cooldownTime;
 
 #pragma warning disable 8618
-            public Turret(int index)
+            public Turret(ShellEntity shellFactory, int index)
 #pragma warning restore 8618
             {
+                _shellFactory = shellFactory;
                 _index = index;
             }
 
@@ -139,7 +149,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                     // Work out what the fuse setting is for this gun and then spawn a shell
                     var fuseVar = ctx.Get($":gun_fuse_{_index}");
                     var fuse = Math.Clamp(fuseVar.Value.Type == Yolol.Execution.Type.Number ? (float)fuseVar.Value.Number : 0, MinFuse, MaxFuse);
-                    scene.Add(new ShellEntity().Create(fuse, _team.Value, _position.Value, _velocity.Value + GunDirection() * ShellSpeed));
+                    scene.Add(_shellFactory.Create(fuse, _team.Value, _position.Value, _velocity.Value + GunDirection() * ShellSpeed));
                 }
             }
 

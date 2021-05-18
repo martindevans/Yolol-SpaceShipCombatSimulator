@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Myre.Entities;
+using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 using Yolol.Grammar.AST;
@@ -10,7 +11,8 @@ namespace ShipCombatCore.Simulation.Entities
     public class MissileEntity
         : EntityDescription
     {
-        public MissileEntity()
+        public MissileEntity(IKernel kernel)
+            : base(kernel)
         {
             AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.Missile);

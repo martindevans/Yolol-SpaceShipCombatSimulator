@@ -1,5 +1,6 @@
 ﻿using System;
 using Myre.Entities;
+using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 
@@ -8,7 +9,8 @@ namespace ShipCombatCore.Simulation.Entities
     public class VictoryMarkerEntity
         : EntityDescription
     {
-        public VictoryMarkerEntity()
+        public VictoryMarkerEntity(IKernel kernel)
+            : base(kernel)
         {
             AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.VictoryMarker);

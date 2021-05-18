@@ -26,7 +26,7 @@ namespace ShipCombatCore.Simulation
 
         private static void BuildFleet(Scene scene, Fleet fleet, uint team, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
         {
-            var shipEntity = new SpaceShipEntity();
+            var shipEntity = new SpaceShipEntity(scene.Kernel);
 
             foreach (var ship in fleet.Ships)
             {
@@ -64,13 +64,13 @@ namespace ShipCombatCore.Simulation
             var scene = new Scene(new Ninject.StandardKernel());
             scene.GetService<Myre.Entities.Services.ProcessService>();
 
-            AsteroidEntity asteroidEntity = new();
+            AsteroidEntity asteroidEntity = new(scene.Kernel);
             scene.Add(asteroidEntity.Create(Vector3.Zero, Vector3.Zero, Quaternion.Identity, Vector3.Zero, 300));
 
             var r = new Random();
             var names = new HashSet<string>();
-            BuildFleet(scene, red, 0, new Vector3(0, 0, 3000), Quaternion.Identity, r, names);
-            BuildFleet(scene, blue, 1, new Vector3(0, 0, -3000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
+            BuildFleet(scene, red, 0, new Vector3(0, 0, 5000), Quaternion.Identity, r, names);
+            BuildFleet(scene, blue, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
 
             return scene;
         }
@@ -95,7 +95,7 @@ namespace ShipCombatCore.Simulation
                 if (ships.Count == 1)
                 {
                     winner = ships[0].Key;
-                    _scene.Add(new VictoryMarkerEntity().Create(ships[0].Key));
+                    _scene.Add(new VictoryMarkerEntity(_scene.Kernel).Create(ships[0].Key));
                     recorder.Record(ts);
                     break;
                 }

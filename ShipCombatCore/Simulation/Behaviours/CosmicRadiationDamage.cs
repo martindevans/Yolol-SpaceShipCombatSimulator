@@ -10,7 +10,7 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class CosmicRadiationDamage
         : ProcessBehaviour
     {
-        private const float MaxDistance = 5000;
+        private const float MaxDistance = 6000;
         private const float MaxRadiationDamage = 1;
         private const float BoostRadiationDamage = 5;
 

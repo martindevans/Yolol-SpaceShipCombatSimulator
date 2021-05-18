@@ -34,6 +34,15 @@ namespace ShipCombatCore.Simulation.Behaviours
         private YololVariable? _ready;
         private YololVariable? _ammoVar;
 
+        private readonly MissileEntity _missileFactory;
+
+#pragma warning disable 8618
+        public MissileLauncher(MissileEntity missileFactory)
+#pragma warning restore 8618
+        {
+            _missileFactory = missileFactory;
+        }
+
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _team = context.CreateProperty(PropertyNames.TeamOwner);
@@ -75,7 +84,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             var result = Parser.ParseProgram(code);
             var program = result.IsOk ? result.Ok : new Program(new Line[0]);
-            Owner.Scene?.Add(new MissileEntity().Create(Guid.NewGuid().ToString(), _team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
+            Owner.Scene?.Add(_missileFactory.Create(Guid.NewGuid().ToString(), _team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
             _trigger.Value--;
             _ammo.Value--;
             _ammoVar.Value = _ammo.Value;

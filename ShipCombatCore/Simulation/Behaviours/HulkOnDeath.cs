@@ -38,7 +38,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             var randomAngular = new Vector3((float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f, (float)rand.NextDouble() - 0.5f) * 2f;
 
             // Create hulk entity
-            Owner.Scene?.Add(new SpaceHulkEntity().Create($"{_name.Value} (HULK)", _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value + randomAngular));
+            Owner.Scene?.Add(new SpaceHulkEntity(Owner.Scene.Kernel).Create($"{_name.Value} (HULK)", _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value + randomAngular));
         }
     }
 }

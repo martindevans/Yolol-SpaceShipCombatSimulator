@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Myre.Entities;
+using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 
@@ -8,7 +9,8 @@ namespace ShipCombatCore.Simulation.Entities
     public class SpaceHulkEntity
         : EntityDescription
     {
-        public SpaceHulkEntity()
+        public SpaceHulkEntity(IKernel kernel)
+            : base(kernel)
         {
             AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.SpaceHulk);

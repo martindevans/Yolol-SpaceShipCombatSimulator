@@ -22,7 +22,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         {
             base.Shutdown(shutdownData);
 
-            Owner.Scene?.Add(new ExplosionEntity().Create(_position.Value));
+            Owner.Scene?.Add(new ExplosionEntity(Owner.Scene.Kernel).Create(_position.Value));
         }
     }
 }

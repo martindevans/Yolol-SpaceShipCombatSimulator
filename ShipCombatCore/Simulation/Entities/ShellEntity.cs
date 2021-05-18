@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Myre.Entities;
+using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 
@@ -9,7 +10,8 @@ namespace ShipCombatCore.Simulation.Entities
     public class ShellEntity
         : EntityDescription
     {
-        public ShellEntity()
+        public ShellEntity(IKernel kernel)
+            : base(kernel)
         {
             AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.Shell);

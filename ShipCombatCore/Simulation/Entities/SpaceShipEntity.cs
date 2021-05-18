@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 using Myre.Entities;
+using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 
@@ -9,7 +10,8 @@ namespace ShipCombatCore.Simulation.Entities
     public class SpaceShipEntity
         : EntityDescription
     {
-        public SpaceShipEntity()
+        public SpaceShipEntity(IKernel kernel)
+            : base(kernel)
         {
             AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.SpaceBattleShip);
