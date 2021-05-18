@@ -169,8 +169,6 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<YololContext>? _context;
         private Property<string>? _name;
 
-        private double _accumulatedTime;
-        
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _context = context.CreateProperty(PropertyNames.YololContext);
@@ -185,12 +183,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (name != null && _name?.Value != null)
                 name.Value = _name.Value;
 
-            _accumulatedTime += elapsedTime * 1000;
-            while (_accumulatedTime > 1)
-            {
-                _accumulatedTime--;
-                _context?.Value?.Tick();
-            }
+            _context?.Value?.Tick();
         }
 
         public class Manager
