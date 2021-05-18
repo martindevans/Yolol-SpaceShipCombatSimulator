@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Myre.Entities;
 using Newtonsoft.Json;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 
 namespace ShipCombatCore.Simulation.Report
 {
     public class Report
+        : IDisposable
     {
+        private readonly Scene _scene;
         private readonly IEnumerable<RecorderMaster> _recordings;
 
         public TimeSpan RealtimeDuration { get; }
         public uint? Winner { get; }
 
-        public Report(TimeSpan realtimeDuration, IEnumerable<RecorderMaster> recordings, uint? winner)
+        public Report(Scene scene, TimeSpan realtimeDuration, IEnumerable<RecorderMaster> recordings, uint? winner)
         {
+            _scene = scene;
             _recordings = recordings;
             Winner = winner;
             RealtimeDuration = realtimeDuration;
@@ -26,6 +30,11 @@ namespace ShipCombatCore.Simulation.Report
                    $"Recorded Entities ({_recordings.Count()}):\n" + 
                    $"Winner: {Winner?.ToString() ?? "Draw"}\n" +
                    string.Join("\n", _recordings.Select(r => $" - {r.ID} ({r.Type})"));
+        }
+
+        public void Dispose()
+        {
+            _scene.Dispose();
         }
 
         public void Serialize(JsonWriter writer)

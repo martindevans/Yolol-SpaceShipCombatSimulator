@@ -61,7 +61,7 @@ namespace ShipCombatCore.Simulation
 
         private static Scene BuildScene(Fleet red, Fleet blue)
         {
-            var scene = new Scene();
+            var scene = new Scene(new Ninject.StandardKernel());
             scene.GetService<Myre.Entities.Services.ProcessService>();
 
             AsteroidEntity asteroidEntity = new();
@@ -102,6 +102,7 @@ namespace ShipCombatCore.Simulation
             }
 
             return new Report.Report(
+                _scene,
                 DateTime.UtcNow - start,
                 recorder.Recordings,
                 winner
