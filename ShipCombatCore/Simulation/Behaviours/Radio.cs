@@ -49,21 +49,21 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             if (_send.Value.Type == Yolol.Execution.Type.String && _send.Value.String.Length > 0)
                 _manager.Send(_team.Value, _send.Value.ToString());
+            _send.Value = "";
 
             if (_manager.Receive(_team.Value, out var received))
-                _recv.Value += received;
+                _recv.Value = received;
         }
 
         private class Manager
             : Manager<Radio>
         {
-            private readonly Dictionary<uint, List<string>> _sent = new();
+            private readonly Dictionary<uint, Queue<string>> _sent = new();
             private readonly Dictionary<uint, string> _received = new();
 
             public void Send(uint team, string message)
             {
-                var messages = _sent.GetOrAdd(team, _ => new List<string>());
-                messages.Add(message);
+                _sent.GetOrAdd(team, _ => new Queue<string>()).Enqueue(message);
             }
 
             public bool Receive(uint team, out string output)
@@ -76,49 +76,16 @@ namespace ShipCombatCore.Simulation.Behaviours
                 base.Update(elapsedTime);
 
                 _received.Clear();
-                ProcessSends();
-                _sent.Clear();
-            }
 
-            private void ProcessSends()
-            {
                 foreach (var (team, messages) in _sent)
                 {
                     if (messages.Count == 0)
                         continue;
-                    
-                    if (messages.Count == 1)
-                        _received[team] = messages[0];
-                    else
-                        _received[team] = Scramble(messages);
-                }
-            }
 
-            private static string Scramble(List<string> messages)
-            {
-                if (messages.Count == 0)
-                    return "";
-                if (messages.Count == 1)
-                    return messages[0];
-
-                messages.Sort((a, b) => a.Length.CompareTo(b.Length));
-                var rng = new Random(messages.Select(m => m.GetHashCode()).Aggregate(HashCode.Combine));
-
-                var length = messages.Last().Length;
-                var builder = new StringBuilder(length);
-
-                for (var c = 0; c < length; c++)
-                {
-                    // Get rid of all messages which are shorter than the current character count
-                    messages.RemoveAll(msg => msg.Length <= c);
-                    if (messages.Count == 0)
-                        break;
-
-                    var i = rng.Next(0, messages.Count);
-                    builder.Append(messages[i][c]);
+                    _received[team] = messages.Dequeue();
                 }
 
-                return builder.ToString();
+                _sent.Clear();
             }
         }
     }

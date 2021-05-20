@@ -49,7 +49,7 @@ todo: link to the device info for each device
  - [Positioning Device](#positioning-device)
  - [Fuel Tank](#fuel-tank)
  - [Engine](#engine)
- - [Momentum Wheels](momentum-wheels)
+ - [Momentum Wheels](#momentum-wheels)
  - [Turret](#turret) (x4)
  - [Missile Launcher](#missile-launcher)
  - [Radar Scanner](#radar-scanner)
@@ -123,6 +123,14 @@ Pushes the entity forward and consumes fuel.
 
  - `:throttle` (**W**) - A value from 0 to 1 which sets the engine power.
 
+### Momentum Wheels
+
+The space ships and the missiles use momentum wheels to turn in place without using fuel.
+
+ - `:torque_x` (**R**) - A value from -1 to 1 indicating how much torque to apply around the X axis.
+ - `:torque_y` (**R**) - A value from -1 to 1 indicating how much torque to apply around the Y axis.
+ - `:torque_z` (**R**) - A value from -1 to 1 indicating how much torque to apply around the Z axis.
+
 ### Turret
 
 The space ship has large turret mounted guns capable of firing nuclear warheads, each nuclear warhead has a timed fuse which sets when it will detonate. Turrets can turn left/right on their base (bearing) and point up/down (elevation). When the turret target angles are changed the turret takes some time to move around to that position. The ship has four turrets, each turret variable has the index of the turret (0 to 3) added to the end.
@@ -158,16 +166,21 @@ Ships and missiles have an active radar scanner which can detect other things in
  - `radar_trigger` (**RW**) - trigger a new scan when truthy. Field will be set to zero.
  - `:radar_count` (**R**) - Number of items detected in the previous scan.
  - `:radar_idx` (**W**) - Index of the item to fetch information for.
- - `:radar_out_dist` (**R**) - Distance to the item indicated by `radar_idx`.
- - `:radar_out_type` (**R**) - Type of the item indicated `radar_idx` as a string.
- - `:radar_out_id` (**R**) - Unique ID of the item indicated `radar_idx` as a string.
+ - `:radar_out_dist` (**R**) - Distance to the item selected by `radar_idx`.
+ - `:radar_out_type` (**R**) - Type of the item selected by `radar_idx` as a string. Possible types are:
+    - "SpaceBattleShip"
+    - "SpaceHulk"
+    - "Missile"
+    - "Shell"
+    - "Asteroid".
+ - `:radar_out_id` (**R**) - Unique ID of the item selected by `radar_idx` as a string.
 
 ### Radio
 
-Every team has a perfectly secure radio channel which can transmit strings - there is no way for enemies to eavesdrop or even interfere with radio messages. However, if two allied ships transmit at the same time the message will be scrambled.
+Every team has a perfectly secure radio channel which can transmit strings - there is no way for enemies to eavesdrop or even interfere with radio messages.
 
- - `:radio_send` (**W**) - if this field is a non-empty string it will be transmitted.
- - `:radio_recv` (**RW**) - the message sent last tick is _added_ to this field (string concatenation) every tick.
+ - `:radio_send` (**W**) - If set to a non-empty string the string will be sent to other radios. If several radios try to sent at once messages will be added to a queue and received on subsequent frames.
+ - `:radio_recv` (**R**) - Received messages are put into this field, overwriting whatever value was there previously.
 
 ### Warhead
 
