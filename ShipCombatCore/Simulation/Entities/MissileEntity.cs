@@ -14,7 +14,7 @@ namespace ShipCombatCore.Simulation.Entities
         public MissileEntity(IKernel kernel)
             : base(kernel)
         {
-            AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
+            AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.Missile);
             AddBehaviour<TeamMember>();
 
@@ -27,7 +27,8 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<SphereColliderSecondary>();
             AddProperty(PropertyNames.SphereRadius, 1);
 
-            // Explode after taking any damage
+            // Explode after taking any significant damage
+            AddBehaviour<CosmicRadiationDamage>();
             AddBehaviour<DamageInstantlyKills>();
             AddBehaviour<ExplodeOnDeath>();
             AddBehaviour<SelfDestructDevice>();
@@ -48,14 +49,13 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordTransformPosition>();
             AddBehaviour<RecordTransformOrientation>();
             AddBehaviour<RecordActualThrottle>();
-            AddBehaviour<RecordFuelLitersInTank>();
         }
 
-        public Entity Create(string name, uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, Program program)
+        public Entity Create(uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, Program program)
         {
             var e = base.Create();
 
-            e.GetProperty(PropertyNames.UniqueName)!.Value = name;
+            e.GetProperty(PropertyNames.UniqueName)!.Value = Guid.NewGuid().ToString();
             e.GetProperty(PropertyNames.TeamOwner)!.Value = team;
 
             e.GetProperty(PropertyNames.Position)!.Value = position;

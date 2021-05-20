@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 using JetBrains.Annotations;
 using Myre.Collections;
 using Myre.Entities;
@@ -39,10 +40,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             {
                 foreach (var secondary in secondarys)
                 {
-                    var d = Vector3.Distance(primary.Position, secondary.Position);
+                    var d = Vector3.DistanceSquared(primary.Position, secondary.Position);
                     var r = primary.Radius + secondary.Radius;
 
-                    if (d <= r)
+                    if (d <= r * r)
                     {
                         // If the impacting object has velocity bounce off
                         var vel = secondary.Owner.GetProperty(PropertyNames.Velocity);

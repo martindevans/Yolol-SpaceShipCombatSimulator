@@ -64,10 +64,31 @@ namespace ShipCombatCore.Simulation
             var scene = new Scene(new Ninject.StandardKernel());
             scene.GetService<Myre.Entities.Services.ProcessService>();
 
+            // Place central asteroid
             AsteroidEntity asteroidEntity = new(scene.Kernel);
-            scene.Add(asteroidEntity.Create(Vector3.Zero, Vector3.Zero, Quaternion.Identity, Vector3.Zero, 300));
+            scene.Add(asteroidEntity.Create(Vector3.Zero, Quaternion.Identity, 300));
 
+            // Place some asteroids around it roughly in the XZ plane
             var r = new Random();
+            for (var i = 0; i < 5; i++)
+            {
+                var d = (float)r.NextDouble() * 3000 + 750;
+                var a = (float)r.NextDouble() * Math.PI * 2;
+                var pos = new Vector3(
+                    (float)Math.Sin(a) * d,
+                    (float)(r.NextDouble() - 0.5) * 550,
+                    (float)Math.Cos(a) * d
+                );
+                var rot = Quaternion.Normalize(new Quaternion(
+                    (float)r.NextDouble(),
+                    (float)r.NextDouble(),
+                    (float)r.NextDouble(),
+                    (float)r.NextDouble()
+                ));
+                var size = (float)r.NextDouble() * 90 + 90;
+                scene.Add(asteroidEntity.Create(pos, rot, size));
+            }
+
             var names = new HashSet<string>();
             BuildFleet(scene, red, 0, new Vector3(0, 0, 5000), Quaternion.Identity, r, names);
             BuildFleet(scene, blue, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);

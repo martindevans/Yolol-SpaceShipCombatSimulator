@@ -62,7 +62,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                     continue;
 
                 foreach (var item in damages)
-                    item.Damage(_damage.Value / distSqr);
+                    item.Damage(_damage.Value / distSqr, DamageType.Explosion);
             }
         }
 
@@ -74,6 +74,13 @@ namespace ShipCombatCore.Simulation.Behaviours
 
     public interface IDamageReceiver
     {
-        void Damage(float damage);
+        void Damage(float damage, DamageType type);
+    }
+
+    public enum DamageType
+    {
+        Explosion,
+        CosmicRadiation,
+        ExtremeCosmicRadiation
     }
 }

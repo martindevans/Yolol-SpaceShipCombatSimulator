@@ -12,7 +12,7 @@ namespace ShipCombatCore.Simulation.Behaviours
     {
         private const float MaxDistance = 6000;
         private const float MaxRadiationDamage = 1;
-        private const float BoostRadiationDamage = 5;
+        private const float BoostRadiationDamage = 10;
 
 #pragma warning disable 8618
         private Property<YololContext> _context;
@@ -43,8 +43,13 @@ namespace ShipCombatCore.Simulation.Behaviours
             // If ship is past danger limit give a big boost to damage
             var distance = _position.Value.Length();
             var rad = Math.Clamp(distance / MaxDistance, 0, 1);
+
+            var type = DamageType.CosmicRadiation;
             if (distance > MaxDistance)
+            {
                 rad += BoostRadiationDamage;
+                type = DamageType.ExtremeCosmicRadiation;
+            }
 
             // Inform Yolol of value
             _cosmicRadiation.Value = rad;
@@ -53,7 +58,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             // Apply damage
             var damages = Owner.GetBehaviours<IDamageReceiver>();
             foreach (var item in damages)
-                item.Damage(rad * MaxRadiationDamage * elapsedTime);
+                item.Damage(rad * MaxRadiationDamage * elapsedTime, type);
         }
 
         public class Manager

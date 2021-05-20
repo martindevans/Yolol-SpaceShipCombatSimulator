@@ -21,7 +21,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
         protected override float Error(in Quaternion expected, in Quaternion estimated)
         {
             var difference = expected - estimated;
-            return difference.Length() * 250;
+            return difference.Length() * 200;
         }
 
         protected override void WriteKeyframeElements(JsonWriter writer, in Quaternion value)

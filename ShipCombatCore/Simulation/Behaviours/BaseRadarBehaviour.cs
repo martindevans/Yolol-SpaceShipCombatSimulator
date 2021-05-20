@@ -56,6 +56,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             _direction = context.CreateProperty(PropertyNames.RadarDirection);
             _directionCurve = new Vector3DirectionCurve(_direction);
+            _direction.Value = RadarDirection(0, 0);
 
             _angle = context.CreateProperty(PropertyNames.RadarAngle);
             _angleCurve = new FloatCurve(_angle);

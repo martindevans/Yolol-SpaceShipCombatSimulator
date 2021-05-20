@@ -52,7 +52,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordActualThrottle>();
             AddBehaviour<RecordFuelLitersInTank>();
             AddBehaviour<RecordRunningLight>();
-            AddBehaviour<RecordCosmicRadiation>();
+            //AddBehaviour<RecordCosmicRadiation>();
         }
 
         public Entity Create(string name, uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, IReadOnlyList<Yolol.Grammar.AST.Program> programs)

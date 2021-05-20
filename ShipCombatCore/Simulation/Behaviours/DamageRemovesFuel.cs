@@ -18,7 +18,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             base.CreateProperties(context);
         }
 
-        public void Damage(float damage)
+        public void Damage(float damage, DamageType type)
         {
             _fuel.Value = Math.Max(0, _fuel.Value - damage);
         }

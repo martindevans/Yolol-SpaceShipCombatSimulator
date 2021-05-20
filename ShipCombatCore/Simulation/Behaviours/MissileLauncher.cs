@@ -84,7 +84,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             var result = Parser.ParseProgram(code);
             var program = result.IsOk ? result.Ok : new Program(new Line[0]);
-            Owner.Scene?.Add(_missileFactory.Create(Guid.NewGuid().ToString(), _team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
+            Owner.Scene?.Add(_missileFactory.Create(_team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
             _trigger.Value--;
             _ammo.Value--;
             _ammoVar.Value = _ammo.Value;

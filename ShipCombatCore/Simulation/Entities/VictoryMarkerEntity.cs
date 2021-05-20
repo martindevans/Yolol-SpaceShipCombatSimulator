@@ -12,7 +12,7 @@ namespace ShipCombatCore.Simulation.Entities
         public VictoryMarkerEntity(IKernel kernel)
             : base(kernel)
         {
-            AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
+            AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.VictoryMarker);
 
             AddBehaviour<VictoryMarker>();

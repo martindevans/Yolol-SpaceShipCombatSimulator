@@ -13,7 +13,6 @@ namespace ShipCombatCore.Simulation.Entities
         public ShellEntity(IKernel kernel)
             : base(kernel)
         {
-            AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
             AddProperty(PropertyNames.EntityType, EntityType.Shell);
             AddBehaviour<TeamMember>();
             
@@ -40,6 +39,8 @@ namespace ShipCombatCore.Simulation.Entities
         public Entity Create(float fuse, uint team, Vector3 position, Vector3 velocity)
         {
             var e = base.Create();
+
+            e.GetProperty(PropertyNames.UniqueName)!.Value = Guid.NewGuid().ToString();
 
             e.GetProperty(PropertyNames.TeamOwner)!.Value = team;
 

@@ -13,7 +13,7 @@ namespace ShipCombatCore.Simulation.Entities
         public ExplosionEntity(IKernel kernel)
             : base(kernel)
         {
-            AddProperty(PropertyNames.UniqueName, Guid.NewGuid().ToString());
+            AddProperty(PropertyNames.UniqueName);
             AddProperty(PropertyNames.EntityType, EntityType.Explosion);
 
             AddBehaviour<LifetimeLimit>();
@@ -32,6 +32,8 @@ namespace ShipCombatCore.Simulation.Entities
         public Entity Create(Vector3 position)
         {
             var e = base.Create();
+
+            e.GetProperty(PropertyNames.UniqueName)!.Value = Guid.NewGuid().ToString();
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
 
