@@ -22,7 +22,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
 
         protected override float Error(in Vector3 expected, in Vector3 estimated)
         {
-            return Vector3.Distance(expected, estimated) / 10;
+            return Vector3.Distance(expected, estimated);
         }
 
         protected override void WriteKeyframeElements(JsonWriter writer, in Vector3 value)

@@ -68,8 +68,8 @@ namespace ShipCombatCore.Simulation.Entities
             e.GetProperty(PropertyNames.YololContext)!.Value = new YololContext(new[] { program });
 
             e.GetProperty(PropertyNames.FuelLitersInTank)!.Value = 15;
-            e.GetProperty(PropertyNames.FuelConsumptionRate)!.Value = 1;
-            e.GetProperty(PropertyNames.MaxEngineForce)!.Value = 5000;
+            e.GetProperty(PropertyNames.FuelConsumptionRate)!.Value = Constants.MissileFuelConsumption;
+            e.GetProperty(PropertyNames.MaxEngineForce)!.Value = Constants.MissileThrust;
 
             return e;
         }

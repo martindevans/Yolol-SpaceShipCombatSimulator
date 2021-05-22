@@ -54,6 +54,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private readonly ExternalsMap _externalsMap;
         private readonly Value[] _externals;
 
+        private readonly Dictionary<string, YololVariable> _cache = new Dictionary<string, YololVariable>();
+
         private readonly List<CompiledProgramState> _compiled;
 
         public YololContext(IEnumerable<Program> programs)
@@ -67,6 +69,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             _externals = new Value[_externalsMap.Count];
             Array.Fill(_externals, (Number)0);
+
+            Constants.SetConstants(this);
         }
 
         public void Tick()
@@ -118,7 +122,12 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public YololVariable Get(string name)
         {
-            return MaybeGet(name) ?? new YololVariable(_externals, -1);
+            if (!_cache.TryGetValue(name, out var v))
+            {
+                v = MaybeGet(name) ?? new YololVariable(_externals, -1);
+                _cache[name] = v;
+            }
+            return v;
         }
 
         public YololVariable? MaybeGet(string name)
@@ -126,9 +135,13 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (!name.StartsWith(":"))
                 throw new ArgumentException($"`{name}` is not an external variable");
 
-            if (!_externalsMap.TryGetValue(name, out var idx))
-                return null;
-            return new YololVariable(_externals, idx);
+            if (!_cache.TryGetValue(name, out var v))
+            {
+                v = !_externalsMap.TryGetValue(name, out var idx) ? null : new YololVariable(_externals, idx);
+                if (v != null)
+                    _cache[name] = v;
+            }
+            return v;
         }
     }
 

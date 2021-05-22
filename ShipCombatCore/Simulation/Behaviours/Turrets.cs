@@ -34,9 +34,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public IEnumerable<ICurve> Curves => _turrets.SelectMany(t => t.Curves);
 
-#pragma warning disable 8618
         private Property<YololContext> _context;
-#pragma warning restore 8618
 
 #pragma warning disable 8618
         public Turrets(ShellEntity shellFactory)
@@ -94,12 +92,28 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             private float _cooldownTime;
 
+            private readonly string _elevationName;
+            private readonly string _bearingName;
+            private readonly string _actualElevationName;
+            private readonly string _actualBearingName;
+            private readonly string _gunReadyName;
+            private readonly string _gunTriggerName;
+            private readonly string _gunFuseName;
+
 #pragma warning disable 8618
             public Turret(ShellEntity shellFactory, int index)
 #pragma warning restore 8618
             {
                 _shellFactory = shellFactory;
                 _index = index;
+
+                _elevationName = $":tgt_gun_elevation_{_index}";
+                _bearingName = $":tgt_gun_bearing_{_index}";
+                _actualElevationName = $":gun_elevation_{_index}";
+                _actualBearingName = $":gun_bearing_{_index}";
+                _gunReadyName = $":gun_ready_{_index}";
+                _gunTriggerName = $":gun_trigger_{_index}";
+                _gunFuseName = $":gun_fuse_{_index}";
             }
 
             public void CreateProperties(Entity.ConstructionContext context)
@@ -120,25 +134,25 @@ namespace ShipCombatCore.Simulation.Behaviours
             public void Update(float elapsedTime, YololContext ctx, Scene scene)
             {
                 // Change gun angles
-                var tgtElevation = ctx.Get($":tgt_gun_elevation_{_index}");
+                var tgtElevation = ctx.Get(_elevationName);
                 _elevation.Value = MoveTo(_elevation.Value, YololValue.Number(tgtElevation.Value, MinElevation, MaxElevation), ElevationSpeed * elapsedTime);
-                var tgtBearing = ctx.Get($":tgt_gun_bearing_{_index}");
+                var tgtBearing = ctx.Get(_bearingName);
                 _bearing.Value = MoveToAngle(_bearing.Value, YololValue.Number(tgtBearing.Value, 0, 360), BearingSpeed * elapsedTime);
 
                 // Copy angles back to Yolol
-                var actualElevation = ctx.Get($":gun_elevation_{_index}");
+                var actualElevation = ctx.Get(_actualElevationName);
                 actualElevation.Value = (Number)_elevation.Value;
-                var actualBearing = ctx.Get($":gun_bearing_{_index}");
+                var actualBearing = ctx.Get(_actualBearingName);
                 actualBearing.Value = (Number)_bearing.Value;
 
                 // Check if gun is ready
-                var ready = ctx.Get($":gun_ready_{_index}");
+                var ready = ctx.Get(_gunReadyName);
                 _cooldownTime -= elapsedTime;
                 if (_cooldownTime <= 0)
                     ready.Value = (Number)true;
 
                 // Fire gun
-                var trigger = ctx.Get($":gun_trigger_{_index}");
+                var trigger = ctx.Get(_gunTriggerName);
                 var t = trigger.Value;
                 if (_cooldownTime <= 0 && t.Type == Yolol.Execution.Type.Number && t.Number > 0) 
                 {
@@ -147,7 +161,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                     ready.Value = (Number)false;
 
                     // Work out what the fuse setting is for this gun and then spawn a shell
-                    var fuseVar = ctx.Get($":gun_fuse_{_index}");
+                    var fuseVar = ctx.Get(_gunFuseName);
                     var fuse = Math.Clamp(fuseVar.Value.Type == Yolol.Execution.Type.Number ? (float)fuseVar.Value.Number : 0, MinFuse, MaxFuse);
                     scene.Add(_shellFactory.Create(fuse, _team.Value, _position.Value, _velocity.Value + GunDirection() * ShellSpeed));
                 }

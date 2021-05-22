@@ -61,6 +61,7 @@ namespace SpaceShipCombatSimulator
             {
                 report.Serialize(writer);
                 writer.Flush();
+                Console.WriteLine($"File Size (Compressed): {ToFileSize(file.Position)}");
             }
 
             using (var file = File.Create("output.json"))
@@ -69,7 +70,19 @@ namespace SpaceShipCombatSimulator
             {
                 report.Serialize(writer);
                 writer.Flush();
+                Console.WriteLine($"File Size (Uncompressed): {ToFileSize(file.Position)}");
             }
+        }
+
+        private static string ToFileSize(long bytes)
+        {
+            var sizes = new[] { "B", "KB", "MB", "GB", "TB" };
+            var order = 0;
+            while (bytes >= 1024 && order < sizes.Length - 1) {
+                order++;
+                bytes /= 1024;
+            }
+            return $"{bytes:0.##}{sizes[order]}";
         }
     }
 }

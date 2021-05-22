@@ -30,24 +30,46 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
         public class Manager
             : BehaviourManager<RecorderMaster>
         {
-            private readonly HashSet<RecorderMaster> _recordings = new();
+            private readonly HashSet<RecorderMaster> _allMasters = new();
+            private readonly HashSet<Recording> _active = new();
 
-            public IEnumerable<RecorderMaster> Recordings => _recordings;
+            public IEnumerable<RecorderMaster> Recordings => _allMasters;
 
             public override void Add(RecorderMaster behaviour)
             {
-                _recordings.Add(behaviour);
+                _allMasters.Add(behaviour);
+
+                _active.Add(new Recording(
+                    behaviour,
+                    behaviour.Owner.GetBehaviours<IRecorder>()
+                ));
 
                 base.Add(behaviour);
             }
 
+            public override bool Remove(RecorderMaster behaviour)
+            {
+                _active.RemoveWhere(a => a.Master.Equals(behaviour));
+
+                return base.Remove(behaviour);
+            }
+
             public void Record(uint timestamp)
             {
-                foreach (var item in Behaviours)
+                foreach (var recording in _active)
+                foreach (var recorder in recording.Recorders)
+                    recorder.Record(timestamp);
+            }
+
+            private readonly struct Recording
+            {
+                public readonly RecorderMaster Master;
+                public readonly IReadOnlyList<IRecorder> Recorders;
+
+                public Recording(RecorderMaster master, IReadOnlyList<IRecorder> recorders)
                 {
-                    var recorders = item.Owner.GetBehaviours<IRecorder>();
-                    foreach (var recorder in recorders)
-                        recorder.Record(timestamp);
+                    Master = master;
+                    Recorders = recorders;
                 }
             }
         }

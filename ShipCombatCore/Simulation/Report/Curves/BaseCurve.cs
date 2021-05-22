@@ -67,7 +67,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
             // Ported from the old Myre animation content processing pipeline:
             // https://github.com/martindevans/Myre/blob/45c2f9595d9167608e4d98795c8d0ff19d05a91c/Myre/Myre.Graphics.Pipeline/Animations/EmbeddedAnimationProcessor.cs#L273
 
-            const float epsilon = 0.05f;
+            const float epsilon = 0.003f;
 
             if (ll.First?.Next?.Next == null)
                 return;

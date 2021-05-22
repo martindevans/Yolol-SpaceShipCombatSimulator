@@ -98,6 +98,8 @@ namespace ShipCombatCore.Simulation
 
         public Report.Report Run()
         {
+            
+
             var start = DateTime.UtcNow;
 
             var recorder = _scene.GetManager<RecorderMaster.Manager>();
@@ -108,16 +110,22 @@ namespace ShipCombatCore.Simulation
             uint ts = 0;
             for (ulong i = 0; i < SimulationDuration; i++)
             {
-                _scene.Update(dt);
-                ts += MillisecondsPerTick;
-                recorder.Record(ts);
+                Tick();
 
                 var ships = teams.Behaviours.Where(a => a.Type == EntityType.SpaceBattleShip).GroupBy(a => a.Team).ToList();
                 if (ships.Count == 1)
                 {
                     winner = ships[0].Key;
                     _scene.Add(new VictoryMarkerEntity(_scene.Kernel).Create(ships[0].Key));
-                    recorder.Record(ts);
+
+                    // Run 5 more seconds of sim
+                    float extraTime = 5000;
+                    while (extraTime > 0)
+                    {
+                        extraTime -= dt;
+                        Tick();
+                    }
+
                     break;
                 }
             }
@@ -128,6 +136,15 @@ namespace ShipCombatCore.Simulation
                 recorder.Recordings,
                 winner
             );
+
+            void Tick()
+            {
+                _scene.Update(dt);
+                ts += MillisecondsPerTick;
+                recorder.Record(ts);
+            }
         }
+
+        
     }
 }

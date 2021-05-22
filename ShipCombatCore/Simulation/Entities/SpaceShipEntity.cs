@@ -72,8 +72,8 @@ namespace ShipCombatCore.Simulation.Entities
             e.GetProperty(PropertyNames.YololContext)!.Value = new YololContext(programs);
 
             e.GetProperty(PropertyNames.FuelLitersInTank)!.Value = 1500;
-            e.GetProperty(PropertyNames.FuelConsumptionRate)!.Value = 3;
-            e.GetProperty(PropertyNames.MaxEngineForce)!.Value = 5000;
+            e.GetProperty(PropertyNames.FuelConsumptionRate)!.Value = Constants.SpaceShipFuelConsumption;
+            e.GetProperty(PropertyNames.MaxEngineForce)!.Value = Constants.SpaceShipThrust;
 
             e.GetProperty(PropertyNames.MissileLauncherAmmo)!.Value = 20;
 
