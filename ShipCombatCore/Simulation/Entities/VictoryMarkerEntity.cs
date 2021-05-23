@@ -21,11 +21,11 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordTransformPosition>();
         }
 
-        public Entity Create(uint winner)
+        public Entity Create(string label)
         {
             var e = base.Create();
 
-            e.GetProperty(PropertyNames.UniqueName)!.Value = $"Team {winner} Wins!";
+            e.GetProperty(PropertyNames.UniqueName)!.Value = $"Team '{label}' Wins!";
 
             return e;
         }

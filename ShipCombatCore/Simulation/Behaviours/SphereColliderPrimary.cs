@@ -17,8 +17,19 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float>? _radius;
         private Property<Vector3>? _position;
 
+        private Manager? _primaryManager;
+        private SphereColliderSecondary.Manager? _secondaryManager;
+
         public float Radius => _radius?.Value ?? 0;
         public Vector3 Position => _position?.Value ?? Vector3.Zero;
+
+        public override void Initialise(INamedDataProvider? initialisationData)
+        {
+            base.Initialise(initialisationData);
+
+            _primaryManager = Owner.Scene?.GetManager<Manager>();
+            _secondaryManager = Owner.Scene?.GetManager<SphereColliderSecondary.Manager>();
+        }
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -30,18 +41,21 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         protected override void Update(float elapsedTime)
         {
-            var primarys = Owner.Scene?.GetManager<Manager>().Behaviours;
-            var secondarys = Owner.Scene?.GetManager<SphereColliderSecondary.Manager>().Items;
+            var primarys = _primaryManager?.Behaviours;
+            var secondarys = _secondaryManager?.Items;
 
             if (primarys == null || secondarys == null)
                 return;
 
             foreach (var primary in primarys)
             {
+                var primaryPos = primary.Position;
+                var primaryRad = primary.Radius;
+
                 foreach (var secondary in secondarys)
                 {
-                    var d = Vector3.DistanceSquared(primary.Position, secondary.Position);
-                    var r = primary.Radius + secondary.Radius;
+                    var d = Vector3.DistanceSquared(primaryPos, secondary.Position);
+                    var r = primaryRad + secondary.Radius;
 
                     if (d <= r * r)
                     {

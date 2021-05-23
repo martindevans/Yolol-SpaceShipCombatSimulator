@@ -8,7 +8,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
     public class Vector3PositionCurve
         : BaseCurve<Vector3>
     {
-        public virtual int Rounding => 2;
+        public virtual int Rounding => 1;
 
         public Vector3PositionCurve(Property<Vector3> property)
             : base(property)

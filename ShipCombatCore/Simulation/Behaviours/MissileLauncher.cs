@@ -13,7 +13,7 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class MissileLauncher
         : ProcessBehaviour
     {
-        private const ushort CooldownTime = 4;
+        private const ushort CooldownTime = (ushort)Constants.MissileRefireTime;
         private float _cooldownTime = CooldownTime;
 
 #pragma warning disable 8618

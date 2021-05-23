@@ -14,14 +14,23 @@ namespace ShipCombatCore.Simulation
 {
     public class Simulation
     {
+        private readonly Fleet _team0;
+        private readonly string _name0;
+        private readonly Fleet _team1;
+        private readonly string _name1;
+
         public static readonly ushort MillisecondsPerTick = 10;
         public static readonly ulong SimulationDuration = (ulong)(TimeSpan.FromMinutes(25).TotalMilliseconds / MillisecondsPerTick);
 
         private readonly Scene _scene;
 
-        public Simulation(Fleet red, Fleet blue)
+        public Simulation(Fleet team0, string name0, Fleet team1, string name1)
         {
-            _scene = BuildScene(red, blue);
+            _team0 = team0;
+            _name0 = name0;
+            _team1 = team1;
+            _name1 = name1;
+            _scene = BuildScene(team0, team1);
         }
 
         private static void BuildFleet(Scene scene, Fleet fleet, uint team, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
@@ -116,7 +125,8 @@ namespace ShipCombatCore.Simulation
                 if (ships.Count == 1)
                 {
                     winner = ships[0].Key;
-                    _scene.Add(new VictoryMarkerEntity(_scene.Kernel).Create(ships[0].Key));
+                    var name = winner == 0 ? _name0 : _name1;
+                    _scene.Add(new VictoryMarkerEntity(_scene.Kernel).Create(name));
 
                     // Run 5 more seconds of sim
                     float extraTime = 5000;

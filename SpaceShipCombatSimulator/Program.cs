@@ -50,7 +50,7 @@ namespace SpaceShipCombatSimulator
                 return;
             }
 
-            var sim = new Simulation(a, b);
+            var sim = new Simulation(a, Path.GetFileNameWithoutExtension(options.PathA), b, Path.GetFileNameWithoutExtension(options.PathB));
             var report = sim.Run();
             Console.WriteLine(report);
 

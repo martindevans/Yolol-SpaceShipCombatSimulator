@@ -6,11 +6,28 @@ namespace ShipCombatCore.Simulation
 {
     public class Constants
     {
-        public static readonly float SpaceShipThrust = 5000;
-        public static readonly float SpaceShipFuelConsumption = 3;
+        public const float SpaceShipThrust = 5000;
+        public const float SpaceShipFuelConsumption = 3;
 
-        public static readonly float MissileThrust = 5000;
-        public static readonly float MissileFuelConsumption = 1;
+        public const float MissileThrust = 5000;
+        public const float MissileFuelConsumption = 1;
+
+        public const float TurretMinElevation = 0;
+        public const float TurretMaxElevation = 80;
+        public const float TurretElevationSpeed = 90;
+        public const float TurretBearingSpeed = 70;
+        public const float TurretMinFuse = 2;
+        public const float TurretMaxFuse = 30;
+        public const float TurretShellSpeed = 300;
+        public const float TurretRefireTime = 4;
+
+        public const float RadarMinRange = 20;
+        public const float RadarMaxRange = 20000;
+
+        public const float RadarMinAngle = 1;
+        public const float RadarMaxAngle = 80;
+
+        public const float MissileRefireTime = 3;
 
         public static void SetConstants(YololContext ctx)
         {

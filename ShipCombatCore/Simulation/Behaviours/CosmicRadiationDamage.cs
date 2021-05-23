@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
+using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
@@ -22,6 +24,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         private YololVariable? _rad;
 
+        private IReadOnlyList<IDamageReceiver>? _damageReceivers;
+
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _context = context.CreateProperty(PropertyNames.YololContext);
@@ -29,6 +33,13 @@ namespace ShipCombatCore.Simulation.Behaviours
             _cosmicRadiation = context.CreateProperty(PropertyNames.CosmicRadiation);
 
             base.CreateProperties(context);
+        }
+
+        public override void Initialise(INamedDataProvider? initialisationData)
+        {
+            _damageReceivers = Owner.GetBehaviours<IDamageReceiver>();
+
+            base.Initialise(initialisationData);
         }
 
         protected override void Update(float elapsedTime)
@@ -56,7 +67,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             _rad.Value = (Number)(rad * 100);
 
             // Apply damage
-            var damages = Owner.GetBehaviours<IDamageReceiver>();
+            var damages = _damageReceivers;
+            if (damages == null)
+                return;
+
             foreach (var item in damages)
                 item.Damage(rad * MaxRadiationDamage * elapsedTime, type);
         }

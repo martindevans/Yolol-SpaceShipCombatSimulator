@@ -5,11 +5,11 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class ActiveRadarScannerDevice
         : BaseRadarBehaviour
     {
-        public const float MinRange = 20;
-        public const float MaxRange = 20000;
+        public const float MinRange = Constants.RadarMinRange;
+        public const float MaxRange = Constants.RadarMaxRange;
 
-        public const float MinAngle = 1;
-        public const float MaxAngle = 80;
+        public const float MinAngle = Constants.RadarMinAngle;
+        public const float MaxAngle = Constants.RadarMaxAngle;
 
         protected override float Elevation(YololContext ctx)
         {

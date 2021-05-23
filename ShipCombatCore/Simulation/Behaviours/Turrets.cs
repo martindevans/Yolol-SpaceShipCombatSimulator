@@ -19,16 +19,16 @@ namespace ShipCombatCore.Simulation.Behaviours
         private readonly ShellEntity _shellFactory;
         private const ushort TurretCount = 4;
 
-        private const float MinElevation = 0;
-        private const float MaxElevation = 80;
-        private const float ElevationSpeed = 90;
-        private const float BearingSpeed = 70;
+        private const float MinElevation = Constants.TurretMinElevation;
+        private const float MaxElevation = Constants.TurretMaxElevation;
+        private const float ElevationSpeed = Constants.TurretElevationSpeed;
+        private const float BearingSpeed = Constants.TurretBearingSpeed;
 
-        private const float MinFuse = 1;
-        private const float MaxFuse = 10;
+        private const float MinFuse = Constants.TurretMinFuse;
+        private const float MaxFuse = Constants.TurretMaxFuse;
 
-        private const float ShellSpeed = 500;
-        private const float CooldownTime = 4;
+        private const float ShellSpeed = Constants.TurretShellSpeed;
+        private const float CooldownTime = Constants.TurretRefireTime;
 
         private readonly List<Turret> _turrets = new();
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace ShipCombatCore.Extensions
 {
-    static class RandomExtensions
+    internal static class RandomExtensions
     {
         /// <summary>
         /// Generates a sequence of values from a normal distribution, using Box-Muller
@@ -98,7 +97,7 @@ namespace ShipCombatCore.Extensions
             if (nMin < 0 && 0 < nMax) subFrom = 0;
             else if (nMax < 0) subFrom = nMaxSq;
 
-            var sigma = 0.0;
+            double sigma;
             double u;
             float z;
             do

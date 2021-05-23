@@ -194,3 +194,25 @@ Missiles are fitted with a nuclear warhead which instantly destroys the missile 
 The space ship is fitted with a large forward facing light.
 
  - `:light` (**W**) - Boolean value indicating if the light is on or off.
+
+## Constants
+
+Various values are made available to code running on ships. These values are constant for a single fight but may be changed between fights for game balance reasons.
+
+ - `:const_SpaceShipThrust`
+ - `:const_SpaceShipFuelConsumption`
+ - `:const_MissileThrust`
+ - `:const_MissileFuelConsumption`
+ - `:const_TurretMinElevation`
+ - `:const_TurretMaxElevation`
+ - `:const_TurretElevationSpeed`
+ - `:const_TurretBearingSpeed`
+ - `:const_TurretMinFuse`
+ - `:const_TurretMaxFuse`
+ - `:const_TurretShellSpeed`
+ - `:const_TurretRefireTime`
+ - `:const_RadarMinRange`
+ - `:const_RadarMaxRange`
+ - `:const_RadarMinAngle`
+ - `:const_RadarMaxAngle`
+ - `:const_MissileRefireTime`
