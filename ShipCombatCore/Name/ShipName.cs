@@ -52,7 +52,7 @@ namespace ShipCombatCore.Name
             "They Couldn't Hit An Elephant At This Dist...",
             "Everything I say Is A Lie",
             "The Mind Killer",
-            "A sufficiently advanced technology",
+            "A Sufficiently Advanced Technology",
             "Worth The Wait",
             "Worth The Weight",
         };

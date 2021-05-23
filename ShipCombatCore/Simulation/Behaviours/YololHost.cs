@@ -122,6 +122,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public YololVariable Get(string name)
         {
+            name = name.ToLowerInvariant();
+
             if (!_cache.TryGetValue(name, out var v))
             {
                 v = MaybeGet(name) ?? new YololVariable(_externals, -1);
@@ -132,6 +134,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public YololVariable? MaybeGet(string name)
         {
+            name = name.ToLowerInvariant();
+
             if (!name.StartsWith(":"))
                 throw new ArgumentException($"`{name}` is not an external variable");
 

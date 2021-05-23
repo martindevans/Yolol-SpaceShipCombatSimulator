@@ -28,8 +28,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (ctx == null)
                 return;
 
-            _prime = ctx.Get(":self_destruct_prime");
-            _trigger = ctx.Get(":self_destruct_trigger");
+            _prime ??= ctx.Get(":self_destruct_prime");
+            _trigger ??= ctx.Get(":self_destruct_trigger");
 
             if (_prime.Value.ToBool() && _trigger.Value.ToBool())
                 Owner.Dispose(new NamedBoxCollection());

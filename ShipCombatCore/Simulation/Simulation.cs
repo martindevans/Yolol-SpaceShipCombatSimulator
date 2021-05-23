@@ -129,7 +129,7 @@ namespace ShipCombatCore.Simulation
                     _scene.Add(new VictoryMarkerEntity(_scene.Kernel).Create(name));
 
                     // Run 5 more seconds of sim
-                    float extraTime = 5000;
+                    float extraTime = 10;
                     while (extraTime > 0)
                     {
                         extraTime -= dt;
