@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using MathHelperRedux;
@@ -9,6 +10,7 @@ using ShipCombatCore.Name;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 using ShipCombatCore.Simulation.Entities;
+using ShipCombatCore.Simulation.Services;
 
 namespace ShipCombatCore.Simulation
 {
@@ -31,6 +33,11 @@ namespace ShipCombatCore.Simulation
             _team1 = team1;
             _name1 = name1;
             _scene = BuildScene(team0, team1);
+        }
+
+        public void AddLog(uint team, StreamWriter output)
+        {
+            _scene.GetService<SceneLogger>().Set(team, output);
         }
 
         private static void BuildFleet(Scene scene, Fleet fleet, uint team, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
@@ -107,8 +114,6 @@ namespace ShipCombatCore.Simulation
 
         public Report.Report Run()
         {
-            
-
             var start = DateTime.UtcNow;
 
             var recorder = _scene.GetManager<RecorderMaster.Manager>();

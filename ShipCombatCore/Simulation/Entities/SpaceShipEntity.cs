@@ -44,6 +44,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<MissileLauncher>();
             AddBehaviour<ActiveRadarScannerDevice>();
             AddBehaviour<Radio>();
+            AddBehaviour<CaptainsLog>();
 
             // Recording
             AddBehaviour<RecorderMaster>();

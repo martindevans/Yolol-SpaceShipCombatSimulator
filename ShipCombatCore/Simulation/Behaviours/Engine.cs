@@ -1,7 +1,5 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using MathHelperRedux;
-using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Type = Yolol.Execution.Type;

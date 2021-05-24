@@ -195,6 +195,12 @@ The space ship is fitted with a large forward facing light.
 
  - `:light` (**W**) - Boolean value indicating if the light is on or off.
 
+### Captains Log
+
+The space ship is fitted with a black box that stores the captains log. This log is written out to a text file (alongside the replay), it is **only available in the local simulator**.
+
+ - `:log` (**W**) - String to write to the log.
+
 ## Constants
 
 Various values are made available to code running on ships. These values are constant for a single fight but may be changed between fights for game balance reasons.

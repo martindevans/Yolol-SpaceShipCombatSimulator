@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using ShipCombatCore.Model;
 using ShipCombatCore.Name;
 using ShipCombatCore.Simulation;
+using ShipCombatCore.Simulation.Report;
 
 namespace SpaceShipCombatSimulator
 {
@@ -51,9 +52,20 @@ namespace SpaceShipCombatSimulator
             }
 
             var sim = new Simulation(a, Path.GetFileNameWithoutExtension(options.PathA), b, Path.GetFileNameWithoutExtension(options.PathB));
-            var report = sim.Run();
-            Console.WriteLine(report);
 
+            Report? report;
+            using (var loga = File.OpenWrite("CaptainsLog_A.txt"))
+            using (var writera = new StreamWriter(loga))
+            using (var logb = File.OpenWrite("CaptainsLog_B.txt"))
+            using (var writerb = new StreamWriter(logb))
+            {
+                sim.AddLog(0, writera);
+                sim.AddLog(1, writerb);
+                report = sim.Run();
+            }
+
+            Console.WriteLine(report);
+            
             using (var file = File.Create("output.json.deflate"))
             using (var zip = new DeflateStream(file, CompressionLevel.Optimal))
             using (var stream = new StreamWriter(zip))
