@@ -41,7 +41,6 @@ Certain fields are read-only (**R**), other fields are write-only (**W**), some 
 
 ## Ship
 
-todo: link to the device info for each device
  - [Yolol Chip](#yolol-chip) (one per script)
  - [Radiation Sensor](#radiation-sensor)
  - [Clock](#clock)
@@ -55,6 +54,8 @@ todo: link to the device info for each device
  - [Radar Scanner](#radar-scanner)
  - [Radio](#radio)
  - [Navigation Lights](#light)
+ - [Captains Log](#log)
+ - [Math Helper](#math-helper)
 
 ## Missiles
 
@@ -84,6 +85,7 @@ Space is filled with deadly radiation which slowly kills the crew of the ship. R
 Measures the time in seconds.
 
  - `:clock` - elapsed time since entity was created (in seconds).
+ - `:clock_dt` - Amount of time that passes per tick  (in seconds).
 
 ### Gyroscope
 
@@ -161,6 +163,9 @@ Ships and missiles have an active radar scanner which can detect other things in
  - `:radar_bearing` (**W**) (Ship Only) - Set the bearing of the beam.
  - `:radar_elevation` (**W**) (Ship Only) - Set the elevation of the beam.
  - `:radar_beam_range` (**W**) (Ship Only) - Set the range of the radar scan.
+ - `:radar_dir_x` (**R**) - X element of the direction of the radar beam (world space).
+ - `:radar_dir_y` (**R**) - Y element of the direction of the radar beam (world space).
+ - `:radar_dir_z` (**R**) - Z element of the direction of the radar beam (world space).
 
 #### Ship And Missile
  - `radar_trigger` (**RW**) - trigger a new scan when truthy. Field will be set to zero.
@@ -195,11 +200,27 @@ The space ship is fitted with a large forward facing light.
 
  - `:light` (**W**) - Boolean value indicating if the light is on or off.
 
-### Captains Log
+### Log
 
 The space ship is fitted with a black box that stores the captains log. This log is written out to a text file (alongside the replay), it is **only available in the local simulator**.
 
  - `:log` (**W**) - String to write to the log.
+
+### Math Helper
+
+Spaceships and missiles are fitted with an accelerator for calculating certain mathematical functions. The device has several registers (`:mathhelper_a`, `:mathhelper_b` etc) and a mode register. When the mode is set the device will perform a calculation on the other registers and then set the mode to an empty string.
+
+ - `:mathhelper_mode` (**RW**) - Set the mode.
+ - `:mathhelper_a` (**RW**) - A register for input or output.
+
+#### Functions
+Each function reads from some registers and then puts the result into some registers. For example `d=a+b+c` means `:mathhelper_d` is set to the sum of `:mathhelper_a`, `:mathhelper_b` and `:mathhelper_c`).
+
+ - `"reset"` - Set all registers to zero.
+ - `"add"` - `a=sum(all_registers)`.
+ - `"world_dir"` - Given a bearing (`a`), an elevation (`b`), a bearing axis (`cde`) and an elevation axis (`fgh`) calculate a world direction vector and store it into `abc`.
+ - `"mulq"` - Multiply a quaternion (`abcd=WXYZ`) by a quaternion (`efgh=WXYZ`). Store result into `abcd`.
+ - `"mulqv"` - Transform a vector (`efg=XYZ`) by a Quaternion (`abcd=WXYZ`). Store result into `efg`.
 
 ## Constants
 
@@ -213,6 +234,12 @@ Various values are made available to code running on ships. These values are con
  - `:const_TurretMaxElevation`
  - `:const_TurretElevationSpeed`
  - `:const_TurretBearingSpeed`
+ - `:const_TurretBearingAxisX`
+ - `:const_TurretBearingAxisY`
+ - `:const_TurretBearingAxisZ`
+ - `:const_TurretElevationAxisX`
+ - `:const_TurretElevationAxisY`
+ - `:const_TurretElevationAxisZ`
  - `:const_TurretMinFuse`
  - `:const_TurretMaxFuse`
  - `:const_TurretShellSpeed`

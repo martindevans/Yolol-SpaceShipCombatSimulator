@@ -43,6 +43,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<MomentumWheels>();
             AddBehaviour<FixedActiveRadarScannerDevice>();
             AddBehaviour<Radio>();
+            AddBehaviour<MathHelperDevice>();
 
             // Recording
             AddBehaviour<RecorderMaster>();

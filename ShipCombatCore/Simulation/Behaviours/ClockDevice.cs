@@ -13,7 +13,9 @@ namespace ShipCombatCore.Simulation.Behaviours
 #pragma warning restore 8618
 
         private double _elapsed;
+
         private YololVariable? _clock;
+        private YololVariable? _clockDt;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -28,10 +30,12 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (ctx == null)
                 return;
 
-            _clock = ctx.Get(":clock");
-
+            _clock ??= ctx.Get(":clock");
             _elapsed += elapsedTime;
             _clock.Value = (Number)_elapsed;
+
+            _clockDt ??= ctx.Get(":clock_dt");
+            _clockDt.Value = (Number)elapsedTime;
         }
 
         public class Manager

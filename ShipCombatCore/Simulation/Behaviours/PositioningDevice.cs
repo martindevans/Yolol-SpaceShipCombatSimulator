@@ -71,10 +71,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             _posy ??= ctx.Get(":pos_y");
             _posz ??= ctx.Get(":pos_z");
 
-            var offsetPos = _position.Value - _initialPosition.Value;
-            _posx.Value = (Number)offsetPos.X;
-            _posy.Value = (Number)offsetPos.Y;
-            _posz.Value = (Number)offsetPos.Z;
+            var pos = _position.Value;
+            _posx.Value = (Number)pos.X;
+            _posy.Value = (Number)pos.Y;
+            _posz.Value = (Number)pos.Z;
         }
 
         public class Manager

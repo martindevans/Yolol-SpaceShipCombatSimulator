@@ -64,9 +64,17 @@ namespace ShipCombatCore.Simulation.Behaviours
             _ammoVar ??= _context.Value!.Get(":missile_ammo");
             _ammoVar.Value = _ammo.Value;
 
+            _ready ??= _context.Value!.Get(":missile_ready");
+            _ready.Value = Number.Zero;
+
             _cooldownTime -= elapsedTime;
             if (_cooldownTime > 0)
                 return;
+
+            if (_ammo.Value == 0)
+                return;
+
+            _ready.Value = Number.One;
 
             _trigger ??= _context.Value!.Get(":missile_trigger");
             if (_trigger.Value <= 0)
@@ -74,13 +82,6 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             _code ??= _context.Value!.Get(":missile_code");
             var code = _code.Value.ToString();
-
-            _ready ??= _context.Value!.Get(":missile_ready");
-            if (_cooldownTime <= 0)
-                _ready.Value = (Number)true;
-
-            if (_ammo.Value == 0)
-                return;
 
             var result = Parser.ParseProgram(code);
             var program = result.IsOk ? result.Ok : new Program(new Line[0]);

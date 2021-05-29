@@ -11,7 +11,12 @@ namespace ShipCombatCore.Helpers
             var eq = Quaternion.CreateFromAxisAngle(elevationAxis, elevation / 180f * MathF.PI);
             var bq = Quaternion.CreateFromAxisAngle(bearingAxis, bearing / 180f * MathF.PI);
 
-            return Vector3.Transform(Vector3.Transform(Vector3.Transform(fwd, eq), bq), shipOrientation);
+            return Vector3.Transform(fwd, shipOrientation * bq * eq);
+        }
+
+        public static Vector3 WorldDirection(float elevation, float bearing, Quaternion shipOrientation)
+        {
+            return WorldDirection(elevation, new Vector3(0, 0, -1), bearing, new Vector3(1, 0, 0), shipOrientation);
         }
     }
 }

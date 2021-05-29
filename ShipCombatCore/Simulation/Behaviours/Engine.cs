@@ -10,6 +10,8 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class Engine
         : ProcessBehaviour
     {
+        private static readonly Vector3 Forward = new Vector3(Constants.ShipLocalForwardX, Constants.ShipLocalForwardY, Constants.ShipLocalForwardZ);
+
 #pragma warning disable 8618
         private Property<YololContext> _context;
 
@@ -61,7 +63,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _fuelLitersInTank.Value -= fuel;
 
             // Apply force
-            var fwd = Vector3.Transform(new Vector3(0, 0, -1), _orientation.Value);
+            var fwd = Vector3.Transform(Forward, _orientation.Value);
             _force.Value += fwd * _maxEngineForce.Value * t;
             
         }

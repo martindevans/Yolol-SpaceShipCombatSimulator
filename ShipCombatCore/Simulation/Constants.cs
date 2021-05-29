@@ -18,16 +18,26 @@ namespace ShipCombatCore.Simulation
         public const float TurretBearingSpeed = 70;
         public const float TurretMinFuse = 2;
         public const float TurretMaxFuse = 30;
-        public const float TurretShellSpeed = 300;
+        public const float TurretShellSpeed = 400;
         public const float TurretRefireTime = 4;
+        public const float TurretBearingAxisX = 1;
+        public const float TurretBearingAxisY = 0;
+        public const float TurretBearingAxisZ = 0;
+        public const float TurretElevationAxisX = 0;
+        public const float TurretElevationAxisY = 0;
+        public const float TurretElevationAxisZ = -1;
 
         public const float RadarMinRange = 20;
         public const float RadarMaxRange = 20000;
 
         public const float RadarMinAngle = 1;
-        public const float RadarMaxAngle = 80;
+        public const float RadarMaxAngle = 90;
 
         public const float MissileRefireTime = 3;
+
+        public const float ShipLocalForwardX = 0;
+        public const float ShipLocalForwardY = 0;
+        public const float ShipLocalForwardZ = -1;
 
         public static void SetConstants(YololContext ctx)
         {

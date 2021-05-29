@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using Myre.Entities;
 using Myre.Entities.Services;
 using Yolol.Execution;
 
@@ -10,13 +10,13 @@ namespace ShipCombatCore.Simulation.Services
         : Service
     {
         private readonly Dictionary<uint, StreamWriter> _streams = new();
-        private TimeService? _time;
+        private double _time;
 
-        public override void Initialise(Scene scene)
+        public override void Update(float elapsedTime)
         {
-            base.Initialise(scene);
+            base.Update(elapsedTime);
 
-            _time = scene.GetService<TimeService>();
+            _time += elapsedTime;
         }
 
         public void Set(uint team, StreamWriter output)
@@ -29,7 +29,9 @@ namespace ShipCombatCore.Simulation.Services
             if (!_streams.TryGetValue(team, out var stream))
                 return;
 
-            stream.WriteLine($"[{_time?.Tick ?? 0}] [{id}] {message}");
+            var timeMs = (int)TimeSpan.FromSeconds(_time).TotalMilliseconds;
+
+            stream.WriteLine($"[{timeMs}ms] [{id}] {message}");
         }
     }
 }

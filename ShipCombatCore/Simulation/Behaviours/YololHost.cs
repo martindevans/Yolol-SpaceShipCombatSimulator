@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
@@ -54,7 +55,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private readonly ExternalsMap _externalsMap;
         private readonly Value[] _externals;
 
-        private readonly Dictionary<string, YololVariable> _cache = new Dictionary<string, YololVariable>();
+        private readonly Dictionary<string, YololVariable> _cache = new();
 
         private readonly List<CompiledProgramState> _compiled;
 
@@ -63,6 +64,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _externalsMap = new ExternalsMap();
 
             var compiled = new List<CompiledProgramState>();
+
             foreach (var prog in programs)
                 compiled.Add(CompiledProgramState.Compile(prog, _externalsMap));
             _compiled = compiled;

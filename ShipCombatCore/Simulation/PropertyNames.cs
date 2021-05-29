@@ -45,5 +45,9 @@ namespace ShipCombatCore.Simulation
         public static readonly TypedName<uint> MissileLauncherAmmo = new("missile_launcher_ammo");
 
         public static readonly TypedName<float> SphereRadius = new("sphere_collider_radius");
+
+        public static readonly TypedName<Vector3> DebugSpherePosition = new("debug_sphere_position");
+        public static readonly TypedName<float> DebugSphereRadius = new("debug_sphere_radius");
+        public static readonly TypedName<Vector3> DebugSphereColor = new("debug_sphere_color");
     }
 }

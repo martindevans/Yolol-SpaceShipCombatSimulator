@@ -54,13 +54,11 @@ namespace SpaceShipCombatSimulator
             var sim = new Simulation(a, Path.GetFileNameWithoutExtension(options.PathA), b, Path.GetFileNameWithoutExtension(options.PathB));
 
             Report? report;
-            using (var loga = File.OpenWrite("CaptainsLog_A.txt"))
-            using (var writera = new StreamWriter(loga))
-            using (var logb = File.OpenWrite("CaptainsLog_B.txt"))
-            using (var writerb = new StreamWriter(logb))
+            using (var loga = File.CreateText("CaptainsLog_A.txt"))
+            using (var logb = File.CreateText("CaptainsLog_B.txt"))
             {
-                sim.AddLog(0, writera);
-                sim.AddLog(1, writerb);
+                sim.AddLog(0, loga);
+                sim.AddLog(1, logb);
                 report = sim.Run();
             }
 

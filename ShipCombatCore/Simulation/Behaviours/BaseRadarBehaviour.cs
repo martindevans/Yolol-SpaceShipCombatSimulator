@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using MathHelperRedux;
@@ -107,6 +108,10 @@ namespace ShipCombatCore.Simulation.Behaviours
                 _range.Value = range;
                 _angle.Value = angle;
 
+                ctx.Get(":radar_dir_x").Value = (Number)_direction.Value.X;
+                ctx.Get(":radar_dir_y").Value = (Number)_direction.Value.Y;
+                ctx.Get(":radar_dir_z").Value = (Number)_direction.Value.Z;
+
                 // Find entities along the beam
                 _lastScanData = FindEntities(_direction.Value, angle.ToRadians());
             }
@@ -146,7 +151,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             var sinAngle = (float)Math.Sin(beamAngle);
             var beam = new HalfRay3(_position.Value, beamDirWorld);
 
-            var circles = new List<RadarCandidate>();
+            var candidates = new List<RadarCandidate>();
             foreach (var item in Owner.Scene.GetManager<RadarDetectable.Manager>().Detectable)
             {
                 // Don't detect self
@@ -154,7 +159,9 @@ namespace ShipCombatCore.Simulation.Behaviours
                     continue;
 
                 // Skip items which are too close
-                if (Vector3.DistanceSquared(item.Position, _position.Value) < 1)
+                var vectorToItem = item.Position - _position.Value;
+                var distanceToItem = vectorToItem.Length();
+                if (distanceToItem < 1)
                     continue;
 
                 // Skip items which are too far from the beam
@@ -164,34 +171,33 @@ namespace ShipCombatCore.Simulation.Behaviours
                 // Calculate beam width at the given distance
                 var beamWidth = sinAngle * distanceAlongBeam;
 
-                // Check if the circle of the item intersects the beam
+                // Check if the sphere of the item intersects the beam
                 if (distFromBeam - item.Radius - beamWidth > 0)
                     continue;
 
-                // Project point onto plane and store projected circle in list
-                // Scale down radius of circle by distance (i.e. width of the beam)
-                circles.Add(new RadarCandidate(
-                    Vector3.Normalize(item.Position - _position.Value),
-                    MathF.Asin(item.Radius / Vector3.Distance(item.Position, _position.Value)),
-                    distanceAlongBeam,
+                // Store candidate for later filtering
+                candidates.Add(new RadarCandidate(
+                    vectorToItem / distanceToItem,
+                    MathF.Asin(item.Radius / distanceToItem),
+                    distanceToItem - item.Radius,
                     item
                 ));
             }
 
             // Sort by distance before removing circles obscured by closer things
-            circles.Sort((a, b) => a.Distance.CompareTo(b.Distance));
+            candidates.Sort((a, b) => a.Distance.CompareTo(b.Distance));
 
             // Remove circles which are totally obscured by earlier circles
-            for (var i = 0; i < circles.Count; i++)
+            for (var i = 0; i < candidates.Count; i++)
             {
-                var c = circles[i];
-                for (var j = circles.Count - 1; j > i; j--)
-                    if (Obscures(c, circles[j]))
-                        circles.RemoveAt(j);
+                var c = candidates[i];
+                for (var j = candidates.Count - 1; j > i; j--)
+                    if (Obscures(c, candidates[j]))
+                        candidates.RemoveAt(j);
             }
 
             // Convert into radar return objects
-            l.AddRange(circles.Select(a => new RadarReturn(a.Item, a.Distance)));
+            l.AddRange(candidates.Select(a => new RadarReturn(a.Item, a.Distance)));
 
             return l;
         }

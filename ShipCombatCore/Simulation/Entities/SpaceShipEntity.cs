@@ -45,6 +45,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<ActiveRadarScannerDevice>();
             AddBehaviour<Radio>();
             AddBehaviour<CaptainsLog>();
+            AddBehaviour<MathHelperDevice>();
 
             // Recording
             AddBehaviour<RecorderMaster>();
@@ -54,6 +55,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<RecordFuelLitersInTank>();
             AddBehaviour<RecordRunningLight>();
             //AddBehaviour<RecordCosmicRadiation>();
+            AddBehaviour<DebugGizmoRecorder>();
         }
 
         public Entity Create(string name, uint team, Vector3 position, Vector3 velocity, Quaternion orientation, Vector3 angularVelocity, IReadOnlyList<Yolol.Grammar.AST.Program> programs)

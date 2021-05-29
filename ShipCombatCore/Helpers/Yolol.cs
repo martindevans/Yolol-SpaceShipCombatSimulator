@@ -5,7 +5,7 @@ namespace ShipCombatCore.Helpers
 {
     public static class YololValue
     {
-        public static float Number(Value value, float min, float max)
+        public static float Number(Value value, float min = float.MinValue, float max = float.MaxValue)
         {
             var v = 0f;
             if (value.Type == Yolol.Execution.Type.Number)
