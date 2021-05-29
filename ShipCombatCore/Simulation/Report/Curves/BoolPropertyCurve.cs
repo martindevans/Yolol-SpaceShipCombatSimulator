@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace ShipCombatCore.Simulation.Report.Curves
 {
-    public class BoolCurve
-        : BaseCurve<bool>
+    public class BoolPropertyCurve
+        : BasePropertyCurve<bool>
     {
-        public BoolCurve(Property<bool> property)
+        public BoolPropertyCurve(Property<bool> property)
             : base(property)
         {
         }

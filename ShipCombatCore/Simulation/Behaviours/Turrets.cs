@@ -78,8 +78,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             private readonly ShellEntity _shellFactory;
             private readonly int _index;
 
-            private FloatCurve _bearingCurve;
-            private FloatCurve _elevationCurve;
+            private FloatPropertyCurve _bearingCurve;
+            private FloatPropertyCurve _elevationCurve;
 
             private Property<uint> _team;
 
@@ -127,8 +127,8 @@ namespace ShipCombatCore.Simulation.Behaviours
                 _bearing = context.CreateProperty(new Myre.TypedName<float>($"gun_turret_bearing_{_index}"));
                 _elevation = context.CreateProperty(new Myre.TypedName<float>($"gun_turret_elevation_{_index}"));
 
-                _bearingCurve = new FloatCurve(_bearing);
-                _elevationCurve = new FloatCurve(_elevation);
+                _bearingCurve = new FloatPropertyCurve(_bearing);
+                _elevationCurve = new FloatPropertyCurve(_elevation);
             }
 
             public void Update(float elapsedTime, YololContext ctx, Scene scene)

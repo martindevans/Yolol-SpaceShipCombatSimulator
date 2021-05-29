@@ -61,11 +61,7 @@ namespace ShipCombatCore.Simulation.Report
                             writer.WriteStartArray();
                             {
                                 foreach (var curve in recorder.Curves)
-                                {
-                                    writer.WriteStartObject();
                                     curve.Serialize(writer);
-                                    writer.WriteEndObject();
-                                }
                             }
                             writer.WriteEndArray();
                         }

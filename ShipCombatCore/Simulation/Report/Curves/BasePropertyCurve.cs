@@ -10,21 +10,37 @@ namespace ShipCombatCore.Simulation.Report.Curves
         public void Serialize(JsonWriter writer);
     }
 
-    public abstract class BaseCurve<T>
-        : ICurve
+    public abstract class BasePropertyCurve<T>
+        : BaseCurve<T>
         where T : struct
     {
         private readonly Property<T> _property;
 
+        protected BasePropertyCurve(Property<T> property, uint optimisationWatermark = 100000)
+            : base(property.Name, optimisationWatermark)
+        {
+            _property = property;
+        }
+
+        public void Extend(uint ms)
+        {
+            Extend(ms, _property.Value);
+        }
+    }
+
+    public abstract class BaseCurve<T>
+        : ICurve
+        where T : struct
+    {
         private readonly uint _minWatermark;
+        private readonly string _name;
         private uint _optimisationWatermark;
         private readonly List<KeyFrame> _keyframes = new();
 
-        protected BaseCurve(Property<T> property, uint optimisationWatermark = 100000)
+        protected BaseCurve(string name, uint optimisationWatermark = 100000)
         {
-            _property = property;
-
             _minWatermark = optimisationWatermark / 2;
+            _name = name;
             _optimisationWatermark = optimisationWatermark;
         }
 
@@ -40,9 +56,9 @@ namespace ShipCombatCore.Simulation.Report.Curves
             }
         }
 
-        public void Extend(uint ms)
+        public void Extend(uint ms, T value)
         {
-            _keyframes.Add(new KeyFrame(TimeSpan.FromMilliseconds(ms), _property.Value));
+            _keyframes.Add(new KeyFrame(TimeSpan.FromMilliseconds(ms), value));
 
             if (_keyframes.Count >= 3)
             {
@@ -111,27 +127,33 @@ namespace ShipCombatCore.Simulation.Report.Curves
 
         public void Serialize(JsonWriter writer)
         {
-            KeyframeReduction(_keyframes);
-
-            writer.WritePropertyName("Name");
-            writer.WriteValue(_property.Name);
-
-            writer.WritePropertyName("Type");
-            writer.WriteValue(typeof(T).Name);
-
-            writer.WritePropertyName("Keys");
-            writer.WriteStartArray();
+            writer.WriteStartObject();
             {
-                foreach (var item in _keyframes)
+                KeyframeReduction(_keyframes);
+
+                writer.WritePropertyName("Name");
+                writer.WriteValue(_name);
+
+                writer.WritePropertyName("Type");
+                writer.WriteValue(typeof(T).Name);
+
+                writer.WritePropertyName("Keys");
+                writer.WriteStartArray();
                 {
-                    writer.WriteStartObject();
-                    writer.WritePropertyName("T");
-                    writer.WriteValue((ulong)item.Time.TotalMilliseconds);
-                    WriteKeyframeElements(writer, item.Value);
-                    writer.WriteEndObject();
+                    foreach (var item in _keyframes)
+                    {
+                        writer.WriteStartObject();
+                        {
+                            writer.WritePropertyName("T");
+                            writer.WriteValue((ulong)item.Time.TotalMilliseconds);
+                            WriteKeyframeElements(writer, item.Value);
+                        }
+                        writer.WriteEndObject();
+                    }
                 }
+                writer.WriteEndArray();
             }
-            writer.WriteEndArray();
+            writer.WriteEndObject();
         }
     }
 }

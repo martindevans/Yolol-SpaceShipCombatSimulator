@@ -29,10 +29,10 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float> _angle;
         private Property<float> _range;
 
-        private Vector3DirectionCurve _directionCurve;
-        private Vector3PositionCurve _targetCurve;
-        private FloatCurve _angleCurve;
-        private FloatCurve _rangeCurve;
+        private Vector3DirectionPropertyCurve _directionCurve;
+        private Vector3PositionPropertyCurve _targetCurve;
+        private FloatPropertyCurve _angleCurve;
+        private FloatPropertyCurve _rangeCurve;
 #pragma warning restore 8618
 
         public IEnumerable<ICurve> Curves
@@ -56,17 +56,17 @@ namespace ShipCombatCore.Simulation.Behaviours
             _context = context.CreateProperty(PropertyNames.YololContext);
 
             _direction = context.CreateProperty(PropertyNames.RadarDirection);
-            _directionCurve = new Vector3DirectionCurve(_direction);
+            _directionCurve = new Vector3DirectionPropertyCurve(_direction);
             _direction.Value = RadarDirection(0, 0);
 
             _angle = context.CreateProperty(PropertyNames.RadarAngle);
-            _angleCurve = new FloatCurve(_angle);
+            _angleCurve = new FloatPropertyCurve(_angle);
 
             _range = context.CreateProperty(PropertyNames.RadarRange);
-            _rangeCurve = new FloatCurve(_range);
+            _rangeCurve = new FloatPropertyCurve(_range);
 
             _target = context.CreateProperty(PropertyNames.RadarTarget);
-            _targetCurve = new Vector3PositionCurve(_target);
+            _targetCurve = new Vector3PositionPropertyCurve(_target);
 
             base.CreateProperties(context);
         }

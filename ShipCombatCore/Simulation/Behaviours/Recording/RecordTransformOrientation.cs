@@ -12,14 +12,14 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
 #pragma warning disable 8618
         private Property<Quaternion> _orientation;
 
-        private QuaternionCurve _orientationCurve;
+        private QuaternionPropertyCurve _orientationCurve;
 #pragma warning restore 8618
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _orientation = context.CreateProperty(PropertyNames.Orientation);
 
-            _orientationCurve = new QuaternionCurve(_orientation);
+            _orientationCurve = new QuaternionPropertyCurve(_orientation);
 
             base.CreateProperties(context);
         }

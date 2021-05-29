@@ -5,27 +5,29 @@ using ShipCombatCore.Extensions;
 
 namespace ShipCombatCore.Simulation.Report.Curves
 {
-    public class Vector3DirectionCurve
-        : BaseCurve<Vector3>
+    public class Vector3PositionPropertyCurve
+        : BasePropertyCurve<Vector3>
     {
-        public Vector3DirectionCurve(Property<Vector3> property)
+        public virtual int Rounding => 1;
+
+        public Vector3PositionPropertyCurve(Property<Vector3> property)
             : base(property)
         {
         }
 
         protected override Vector3 Estimate(in Vector3 start, in Vector3 end, float t)
         {
-            return Vector3.Normalize(start * (1 - t) + end * t);
+            return start * (1 - t) + end * t;
         }
 
         protected override float Error(in Vector3 expected, in Vector3 estimated)
         {
-            return (1 - Vector3.Dot(expected, estimated)) * 110;
+            return Vector3.Distance(expected, estimated);
         }
 
         protected override void WriteKeyframeElements(JsonWriter writer, in Vector3 value)
         {
-            value.SerializeElements(writer);
+            value.SerializeElements(writer, Rounding);
         }
     }
 }

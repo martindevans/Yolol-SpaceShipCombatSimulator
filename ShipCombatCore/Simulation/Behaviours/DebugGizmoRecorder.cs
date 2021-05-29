@@ -17,9 +17,9 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float> _sphereRad;
         private Property<Vector3> _sphereColor;
 
-        private Vector3PositionCurve _spherePositionCurve;
-        private FloatCurve _sphereRadCurve;
-        private Vector3PositionCurve _sphereColorCurve;
+        private Vector3PositionPropertyCurve _spherePositionCurve;
+        private FloatPropertyCurve _sphereRadCurve;
+        private Vector3PositionPropertyCurve _sphereColorCurve;
 #pragma warning restore 8618
 
         private YololVariable? _spherePosXVar;
@@ -38,9 +38,9 @@ namespace ShipCombatCore.Simulation.Behaviours
             _sphereRad = context.CreateProperty(PropertyNames.DebugSphereRadius);
             _sphereColor = context.CreateProperty(PropertyNames.DebugSphereColor);
 
-            _spherePositionCurve = new Vector3PositionCurve(_spherePos);
-            _sphereRadCurve = new FloatCurve(_sphereRad);
-            _sphereColorCurve = new Vector3PositionCurve(_sphereColor);
+            _spherePositionCurve = new Vector3PositionPropertyCurve(_spherePos);
+            _sphereRadCurve = new FloatPropertyCurve(_sphereRad);
+            _sphereColorCurve = new Vector3PositionPropertyCurve(_sphereColor);
 
             base.CreateProperties(context);
         }

@@ -12,7 +12,7 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
         private Property<YololContext> _context;
 
         private Property<bool> _lightState;
-        private BoolCurve _lightCurve;
+        private BoolPropertyCurve _lightCurve;
 #pragma warning restore 8618
 
         public override void CreateProperties(Entity.ConstructionContext context)
@@ -20,7 +20,7 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
             _context = context.CreateProperty(PropertyNames.YololContext);
 
             _lightState = context.CreateProperty(PropertyNames.RunningLightState);
-            _lightCurve = new BoolCurve(_lightState);
+            _lightCurve = new BoolPropertyCurve(_lightState);
 
             base.CreateProperties(context);
         }
