@@ -148,7 +148,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (Owner.Scene == null)
                 return l;
 
-            var sinAngle = (float)Math.Sin(beamAngle);
+            var tanHalfAngle = MathF.Tan(beamAngle / 2);
             var beam = new HalfRay3(_position.Value, beamDirWorld);
 
             var candidates = new List<RadarCandidate>();
@@ -169,10 +169,10 @@ namespace ShipCombatCore.Simulation.Behaviours
                 var distFromBeam = Vector3.Distance(pointOnBeam, item.Position);
 
                 // Calculate beam width at the given distance
-                var beamWidth = sinAngle * distanceAlongBeam;
+                var beamRadius = tanHalfAngle * distanceAlongBeam;
 
                 // Check if the sphere of the item intersects the beam
-                if (distFromBeam - item.Radius - beamWidth > 0)
+                if (distFromBeam - item.Radius - beamRadius > 0)
                     continue;
 
                 // Store candidate for later filtering
