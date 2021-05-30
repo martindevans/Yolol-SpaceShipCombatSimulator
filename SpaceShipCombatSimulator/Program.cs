@@ -67,7 +67,7 @@ namespace SpaceShipCombatSimulator
             using (var file = File.Create("output.json.deflate"))
             using (var zip = new DeflateStream(file, CompressionLevel.Optimal))
             using (var stream = new StreamWriter(zip))
-            using (var writer = new JsonTextWriter(stream) { Formatting = Formatting.Indented })
+            using (var writer = new JsonTextWriter(stream) { Formatting = Formatting.None })
             {
                 report.Serialize(writer);
                 writer.Flush();

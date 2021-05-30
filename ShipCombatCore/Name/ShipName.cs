@@ -73,7 +73,7 @@ namespace ShipCombatCore.Name
             "Locust", "Wasp", "Beetle", "Dragonfly",
             "Vindictive", "Cruel", "Malicious", "Merciless", "Resentful", "Grim", "Avenging", "Malignant", "Venomous", "Unrelenting", "Nervous", "Prosthetic",
             "Cylon", "Collective", "Frozenbyte",
-            "Etnernal", "Neverending", "Everlasting", "Endless", "Perpetual", "Immutable", "Immortal",
+            "Eternal", "Neverending", "Everlasting", "Endless", "Perpetual", "Immutable", "Immortal",
             "Desperate", "Bold", "Daring", "Frantic", "Frenzied", "Furious", "Violent", "Audacious", "Scandalous", "Wild"
         };
 

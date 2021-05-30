@@ -156,7 +156,7 @@ The space ship has a missile launcher with a limit number of missiles. Missiles 
 
 ### Radar Scanner
 
-Ships and missiles have an active radar scanner which can detect other things in space. On space ships the radar scanner can be steered to look in any direction and with any beam angle up to 80 degrees. On missiles the radar is a fixed forward facing 15 degree beam.
+Ships and missiles have an active radar scanner which can detect other things in space. On space ships the radar scanner can be steered to look in any direction and with any beam angle up to 90 degrees. On missiles the radar is a fixed forward facing 15 degree beam.
 
 #### Ship Only
  - `:radar_beam_angle` (**W**) (Ship Only) - Set the beam angle in degrees.
@@ -168,7 +168,7 @@ Ships and missiles have an active radar scanner which can detect other things in
  - `:radar_dir_z` (**R**) - Z element of the direction of the radar beam (world space).
 
 #### Ship And Missile
- - `radar_trigger` (**RW**) - trigger a new scan when truthy. Field will be set to zero.
+ - `:radar_trigger` (**RW**) - trigger a new scan when truthy. Field will be set to zero.
  - `:radar_count` (**R**) - Number of items detected in the previous scan.
  - `:radar_idx` (**W**) - Index of the item to fetch information for.
  - `:radar_out_dist` (**R**) - Distance to the item selected by `radar_idx`.

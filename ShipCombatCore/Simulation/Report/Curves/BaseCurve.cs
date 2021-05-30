@@ -71,11 +71,11 @@ namespace ShipCombatCore.Simulation.Report.Curves
             }
 
             // Once a lot of keyframes have accumulated in memory optimise them with linear keyframe reduction to reduce memory usage.
-            // Set the threshold for the next optimisation at 5x whatever this optimisation pass manages.
+            // Set the threshold for the next optimisation at 2x whatever this optimisation pass manages.
             if (_keyframes.Count > _optimisationWatermark)
             {
                 KeyframeReduction(_keyframes);
-                _optimisationWatermark = Math.Max(_minWatermark, (uint)(_keyframes.Count * 5));
+                _optimisationWatermark = Math.Max(_minWatermark, (uint)(_keyframes.Count * 2));
             }
         }
 

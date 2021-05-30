@@ -18,10 +18,10 @@ namespace ShipCombatCore.Simulation.Report.Curves
         {
             _property = property;
 
-            _w = new FloatCurve($"{property.Name}.w", 45);
-            _x = new FloatCurve($"{property.Name}.x", 45);
-            _y = new FloatCurve($"{property.Name}.y", 45);
-            _z = new FloatCurve($"{property.Name}.z", 45);
+            _w = new FloatCurve($"{property.Name}.w", 95);
+            _x = new FloatCurve($"{property.Name}.x", 85);
+            _y = new FloatCurve($"{property.Name}.y", 85);
+            _z = new FloatCurve($"{property.Name}.z", 85);
         }
 
         public void Extend(uint ms)

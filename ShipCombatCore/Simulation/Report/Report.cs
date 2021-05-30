@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Myre.Entities;
 using Newtonsoft.Json;
 using ShipCombatCore.Simulation.Behaviours.Recording;
+using ShipCombatCore.Simulation.Report.Curves;
 
 namespace ShipCombatCore.Simulation.Report
 {

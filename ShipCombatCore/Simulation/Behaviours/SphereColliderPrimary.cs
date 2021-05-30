@@ -42,9 +42,11 @@ namespace ShipCombatCore.Simulation.Behaviours
         protected override void Update(float elapsedTime)
         {
             var primarys = _primaryManager?.Behaviours;
-            var secondarys = _secondaryManager?.Items;
+            if (primarys == null)
+                return;
 
-            if (primarys == null || secondarys == null)
+            var secondarys = _secondaryManager?.Items;
+            if (secondarys == null)
                 return;
 
             foreach (var primary in primarys)
