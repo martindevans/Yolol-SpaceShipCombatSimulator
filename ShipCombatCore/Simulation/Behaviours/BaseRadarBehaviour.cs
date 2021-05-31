@@ -30,7 +30,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         private Vector3DirectionPropertyCurve _directionCurve;
         private Vector3PositionPropertyCurve _targetCurve;
-        private FloatPropertyCurve _angleCurve;
+        private BoundedFloat16PropertyCurve _angleCurve;
         private FloatPropertyCurve _rangeCurve;
 #pragma warning restore 8618
 
@@ -45,7 +45,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             }
         }
 
-        private List<RadarReturn> _lastScanData = new List<RadarReturn>();
+        private List<RadarReturn> _lastScanData = new();
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -59,7 +59,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _direction.Value = RadarDirection(0, 0);
 
             _angle = context.CreateProperty(PropertyNames.RadarAngle);
-            _angleCurve = new FloatPropertyCurve(_angle);
+            _angleCurve = new BoundedFloat16PropertyCurve(_angle);
 
             _range = context.CreateProperty(PropertyNames.RadarRange);
             _rangeCurve = new FloatPropertyCurve(_range);

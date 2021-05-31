@@ -9,19 +9,19 @@ namespace ShipCombatCore.Simulation.Report.Curves
     {
         private readonly Property<Quaternion> _property;
 
-        private readonly FloatCurve _w;
-        private readonly FloatCurve _x;
-        private readonly FloatCurve _y;
-        private readonly FloatCurve _z;
+        private readonly BoundedFloat16Curve _w;
+        private readonly BoundedFloat16Curve _x;
+        private readonly BoundedFloat16Curve _y;
+        private readonly BoundedFloat16Curve _z;
 
         public QuaternionPropertyCurve(Property<Quaternion> property)
         {
             _property = property;
 
-            _w = new FloatCurve($"{property.Name}.w", 95);
-            _x = new FloatCurve($"{property.Name}.x", 85);
-            _y = new FloatCurve($"{property.Name}.y", 85);
-            _z = new FloatCurve($"{property.Name}.z", 85);
+            _w = new BoundedFloat16Curve($"{property.Name}.w", 95);
+            _x = new BoundedFloat16Curve($"{property.Name}.x", 95);
+            _y = new BoundedFloat16Curve($"{property.Name}.y", 95);
+            _z = new BoundedFloat16Curve($"{property.Name}.z", 95);
         }
 
         public void Extend(uint ms)

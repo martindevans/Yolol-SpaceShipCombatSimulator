@@ -3,7 +3,7 @@
 namespace ShipCombatCore.Simulation.Behaviours.Recording
 {
     public class RecordFuelLitersInTank
-        : BaseRecordFloat
+        : BaseRecordBoundedFloat16
     {
         protected override TypedName<float> PropertyName => PropertyNames.FuelLitersInTank;
     }

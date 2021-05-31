@@ -33,18 +33,22 @@ namespace ShipCombatCore.Simulation.Report.Curves
         where T : struct
     {
         private readonly uint _minWatermark;
-        private readonly string _name;
         private uint _optimisationWatermark;
         private readonly List<KeyFrame> _keyframes = new();
+
+        public IReadOnlyList<KeyFrame> Keyframes => _keyframes;
+
+        public string Name { get; }
 
         protected BaseCurve(string name, uint optimisationWatermark = 100000)
         {
             _minWatermark = optimisationWatermark / 2;
-            _name = name;
             _optimisationWatermark = optimisationWatermark;
+
+            Name = name;
         }
 
-        private readonly struct KeyFrame
+        public readonly struct KeyFrame
         {
             public readonly TimeSpan Time;
             public readonly T Value;
@@ -74,7 +78,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
             // Set the threshold for the next optimisation at 2x whatever this optimisation pass manages.
             if (_keyframes.Count > _optimisationWatermark)
             {
-                KeyframeReduction(_keyframes);
+                KeyFrameReduction();
                 _optimisationWatermark = Math.Max(_minWatermark, (uint)(_keyframes.Count * 2));
             }
         }
@@ -85,28 +89,33 @@ namespace ShipCombatCore.Simulation.Report.Curves
 
         protected abstract void WriteKeyframeElements(JsonWriter writer, in T value);
 
-        private void KeyframeReduction(List<KeyFrame> keyframes)
+        protected void KeyFrameReduction()
         {
-            var ll = new LinkedList<KeyFrame>(keyframes);
+            KeyframeReduction(_keyframes);
 
-            // Ported from the old Myre animation content processing pipeline:
-            // https://github.com/martindevans/Myre/blob/45c2f9595d9167608e4d98795c8d0ff19d05a91c/Myre/Myre.Graphics.Pipeline/Animations/EmbeddedAnimationProcessor.cs#L273
-
-            if (ll.First?.Next?.Next == null)
-                return;
-
-            for (var node = ll.First.Next; node?.Next != null && node.Previous != null; node = node.Next)
+            void KeyframeReduction(List<KeyFrame> keyframes)
             {
-                if (CanRemove(node.Previous.Value, node.Value, node.Next.Value))
-                {
-                    var n = node.Previous;
-                    ll.Remove(node);
-                    node = n;
-                }
-            }
+                var ll = new LinkedList<KeyFrame>(keyframes);
 
-            keyframes.Clear();
-            keyframes.AddRange(ll);
+                // Ported from the old Myre animation content processing pipeline:
+                // https://github.com/martindevans/Myre/blob/45c2f9595d9167608e4d98795c8d0ff19d05a91c/Myre/Myre.Graphics.Pipeline/Animations/EmbeddedAnimationProcessor.cs#L273
+
+                if (ll.First?.Next?.Next == null)
+                    return;
+
+                for (var node = ll.First.Next; node?.Next != null && node.Previous != null; node = node.Next)
+                {
+                    if (CanRemove(node.Previous.Value, node.Value, node.Next.Value))
+                    {
+                        var n = node.Previous;
+                        ll.Remove(node);
+                        node = n;
+                    }
+                }
+
+                keyframes.Clear();
+                keyframes.AddRange(ll);
+            }
         }
 
         private bool CanRemove(in KeyFrame a, in KeyFrame b, in KeyFrame c)
@@ -125,14 +134,14 @@ namespace ShipCombatCore.Simulation.Report.Curves
             return err < epsilon;
         }
 
-        public void Serialize(JsonWriter writer)
+        public virtual void Serialize(JsonWriter writer)
         {
+            KeyFrameReduction();
+
             writer.WriteStartObject();
             {
-                KeyframeReduction(_keyframes);
-
                 writer.WritePropertyName("Name");
-                writer.WriteValue(_name);
+                writer.WriteValue(Name);
 
                 writer.WritePropertyName("Type");
                 writer.WriteValue(typeof(T).Name);
