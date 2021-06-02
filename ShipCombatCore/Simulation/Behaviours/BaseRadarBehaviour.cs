@@ -29,7 +29,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float> _range;
 
         private Vector3DirectionPropertyCurve _directionCurve;
-        private Vector3PositionPropertyCurve _targetCurve;
+        private Vector3PositionPropertyCompoundCurve _targetCurve;
         private BoundedFloat16PropertyCurve _angleCurve;
         private FloatPropertyCurve _rangeCurve;
 #pragma warning restore 8618
@@ -65,7 +65,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _rangeCurve = new FloatPropertyCurve(_range);
 
             _target = context.CreateProperty(PropertyNames.RadarTarget);
-            _targetCurve = new Vector3PositionPropertyCurve(_target);
+            _targetCurve = new Vector3PositionPropertyCompoundCurve(_target);
 
             base.CreateProperties(context);
         }

@@ -1,31 +1,44 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using Myre.Entities;
 using Newtonsoft.Json;
-using ShipCombatCore.Extensions;
 
 namespace ShipCombatCore.Simulation.Report.Curves
 {
     public class Vector3DirectionPropertyCurve
-        : BasePropertyCurve<Vector3>
+        : ICurve
     {
+        private readonly Property<Vector3> _property;
+
+        private readonly BoundedFloat16Curve _x;
+        private readonly BoundedFloat16Curve _y;
+        private readonly BoundedFloat16Curve _z;
+
         public Vector3DirectionPropertyCurve(Property<Vector3> property)
-            : base(property)
         {
+            _property = property;
+
+            _x = new BoundedFloat16Curve($"{property.Name}.x", 110);
+            _y = new BoundedFloat16Curve($"{property.Name}.y", 110);
+            _z = new BoundedFloat16Curve($"{property.Name}.z", 110);
         }
 
-        protected override Vector3 Estimate(in Vector3 start, in Vector3 end, float t)
+        public void Extend(uint ms)
         {
-            return Vector3.Normalize(start * (1 - t) + end * t);
+            if (_property.Value == Vector3.Zero)
+                throw new InvalidOperationException("Zero length unit vector");
+
+            var n = Vector3.Normalize(_property.Value);
+            _x.Extend(ms, n.X);
+            _y.Extend(ms, n.Y);
+            _z.Extend(ms, n.Z);
         }
 
-        protected override float Error(in Vector3 expected, in Vector3 estimated)
+        public void Serialize(JsonWriter writer)
         {
-            return (1 - Vector3.Dot(expected, estimated)) * 110;
-        }
-
-        protected override void WriteKeyframeElements(JsonWriter writer, in Vector3 value)
-        {
-            value.SerializeElements(writer);
+            _x.Serialize(writer);
+            _y.Serialize(writer);
+            _z.Serialize(writer);
         }
     }
 }

@@ -12,14 +12,14 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
 #pragma warning disable 8618
         private Property<Vector3> _position;
 
-        private Vector3PositionPropertyCurve _positionCurve;
+        private Vector3PositionPropertyCompoundCurve _positionCurve;
 #pragma warning restore 8618
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _position = context.CreateProperty(PropertyNames.Position);
 
-            _positionCurve = new Vector3PositionPropertyCurve(_position);
+            _positionCurve = new Vector3PositionPropertyCompoundCurve(_position);
 
             base.CreateProperties(context);
         }
