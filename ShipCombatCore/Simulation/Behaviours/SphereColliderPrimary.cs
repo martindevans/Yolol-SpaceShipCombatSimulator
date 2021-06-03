@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using HandyCollections.Geometry;
 using JetBrains.Annotations;
 using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using SwizzleMyVectors.Geometry;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -23,6 +25,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         public float Radius => _radius?.Value ?? 0;
         public Vector3 Position => _position?.Value ?? Vector3.Zero;
 
+        public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
+
         public override void Initialise(INamedDataProvider? initialisationData)
         {
             base.Initialise(initialisationData);
@@ -41,23 +45,19 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         protected override void Update(float elapsedTime)
         {
-            var primarys = _primaryManager?.Behaviours;
-            if (primarys == null)
+            if (_primaryManager == null)
                 return;
 
             var secondarys = _secondaryManager?.Items;
             if (secondarys == null)
                 return;
 
-            foreach (var primary in primarys)
+            foreach (var secondary in secondarys)
             {
-                var primaryPos = primary.Position;
-                var primaryRad = primary.Radius;
-
-                foreach (var secondary in secondarys)
+                foreach (var primary in _primaryManager.GetColliders(secondary.Bounds))
                 {
-                    var d = Vector3.DistanceSquared(primaryPos, secondary.Position);
-                    var r = primaryRad + secondary.Radius;
+                    var d = Vector3.DistanceSquared(primary.Position, secondary.Position);
+                    var r = primary.Radius + secondary.Radius;
 
                     if (d <= r * r)
                     {
@@ -67,6 +67,8 @@ namespace ShipCombatCore.Simulation.Behaviours
                             vel.Value *= -0.15f;
 
                         secondary.Owner.Dispose(new NamedBoxCollection());
+
+                        break;
                     }
                 }
             }
@@ -76,6 +78,33 @@ namespace ShipCombatCore.Simulation.Behaviours
         private class Manager
             : Manager<SphereColliderPrimary>
         {
+            private readonly Octree<SphereColliderPrimary> _octree;
+
+            public Manager()
+            {
+                _octree = new Octree<SphereColliderPrimary>(new BoundingBox(new Vector3(-20000), new Vector3(30000)), 1, 8);
+            }
+
+            public override void Add(SphereColliderPrimary behaviour)
+            {
+                base.Add(behaviour);
+
+                _octree.Insert(behaviour.Bounds, behaviour);
+            }
+
+            public IEnumerable<SphereColliderPrimary> GetColliders(BoundingBox bounds)
+            {
+                return _octree.Intersects(bounds);
+            }
+
+            public override bool Remove(SphereColliderPrimary behaviour)
+            {
+                var removed = base.Remove(behaviour);
+                if (removed)
+                    _octree.Remove(behaviour.Bounds, behaviour);
+
+                return removed;
+            }
         }
     }
 }

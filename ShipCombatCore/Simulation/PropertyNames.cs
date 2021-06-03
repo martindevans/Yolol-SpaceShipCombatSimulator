@@ -38,6 +38,7 @@ namespace ShipCombatCore.Simulation
         public static readonly TypedName<string> UniqueName = new("unique_name");
         public static readonly TypedName<EntityType> EntityType = new("entity_type");
         public static readonly TypedName<uint> TeamOwner = new("entity_team");
+        public static readonly TypedName<string> TeamName = new("entity_team_name");
 
         public static readonly TypedName<float> DamageSphereAmount = new("damage_sphere_amount");
         public static readonly TypedName<float> DamageSphereRange = new("damage_sphere_range");

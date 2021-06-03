@@ -32,7 +32,8 @@ namespace ShipCombatCore.Simulation
             _name0 = name0;
             _team1 = team1;
             _name1 = name1;
-            _scene = BuildScene(team0, team1);
+
+            _scene = BuildScene();
         }
 
         public void AddLog(uint team, StreamWriter output)
@@ -40,7 +41,7 @@ namespace ShipCombatCore.Simulation
             _scene.GetService<SceneLogger>().Set(team, output);
         }
 
-        private static void BuildFleet(Scene scene, Fleet fleet, uint team, Vector3 middle, Quaternion forward, Random rand, HashSet<string> names)
+        private static void BuildFleet(Scene scene, Fleet fleet, string teamName, uint team, Vector3 middle, Quaternion forward, Random rand, ISet<string> names)
         {
             var shipEntity = new SpaceShipEntity(scene.Kernel);
 
@@ -55,10 +56,10 @@ namespace ShipCombatCore.Simulation
 
                 // Choose an offset
                 var offset = new Vector3((float)rand.NextDouble(), (float)rand.NextDouble(), (float)rand.NextDouble()) * 2 - Vector3.One;
-                offset *= 250;
+                offset *= 350;
 
                 // Spawn ship entity
-                var e = shipEntity.Create(name, team, middle + offset, Vector3.Zero, forward, new Vector3(0, 0, 0), ship.Programs);
+                var e = shipEntity.Create(name, teamName, team, middle + offset, Vector3.Zero, forward, new Vector3(0, 0, 0), ship.Programs);
                 scene.Add(e);
 
                 // Load up data
@@ -75,7 +76,7 @@ namespace ShipCombatCore.Simulation
             }
         }
 
-        private static Scene BuildScene(Fleet red, Fleet blue)
+        private Scene BuildScene()
         {
             var scene = new Scene(new Ninject.StandardKernel());
             scene.GetService<Myre.Entities.Services.ProcessService>();
@@ -84,30 +85,29 @@ namespace ShipCombatCore.Simulation
             AsteroidEntity asteroidEntity = new(scene.Kernel);
             scene.Add(asteroidEntity.Create(Vector3.Zero, Quaternion.Identity, 300));
 
-            // Place some asteroids around it roughly in the XZ plane
             var r = new Random();
-            for (var i = 0; i < 5; i++)
+
+            // Place asteroids around the center in a sphere
+            for (var i = 0; i < 40; i++)
             {
-                var d = (float)r.NextDouble() * 3000 + 750;
-                var a = (float)r.NextDouble() * Math.PI * 2;
-                var pos = new Vector3(
-                    (float)Math.Sin(a) * d,
-                    (float)(r.NextDouble() - 0.5) * 550,
-                    (float)Math.Cos(a) * d
-                );
-                var rot = Quaternion.Normalize(new Quaternion(
-                    (float)r.NextDouble(),
-                    (float)r.NextDouble(),
-                    (float)r.NextDouble(),
-                    (float)r.NextDouble()
-                ));
-                var size = (float)r.NextDouble() * 90 + 90;
-                scene.Add(asteroidEntity.Create(pos, rot, size));
+                var dist = (float)(4500 * r.NextDouble());
+                if (dist > 250)
+                {
+                    var pos = Myre.Extensions.RandomExtensions.RandomNormalVector(r) * dist * new Vector3(1, 0.5f, 1);
+                    var rot = Quaternion.Normalize(new Quaternion(
+                        (float)r.NextDouble(),
+                        (float)r.NextDouble(),
+                        (float)r.NextDouble(),
+                        (float)r.NextDouble()
+                    ));
+                    var size = (float)r.NextDouble() * 120 + 30;
+                    scene.Add(asteroidEntity.Create(pos, rot, size));
+                }
             }
 
             var names = new HashSet<string>();
-            BuildFleet(scene, red, 0, new Vector3(0, 0, 5000), Quaternion.Identity, r, names);
-            BuildFleet(scene, blue, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
+            BuildFleet(scene, _team0, _name0, 0, new Vector3(0, 0, 5000), Quaternion.Identity, r, names);
+            BuildFleet(scene, _team1, _name0, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
 
             return scene;
         }

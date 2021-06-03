@@ -3,6 +3,7 @@ using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Extensions;
+using Yolol.Execution;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -44,12 +45,14 @@ namespace ShipCombatCore.Simulation.Behaviours
             _send ??= ctx.Get(":radio_tx");
             _recv ??= ctx.Get(":radio_rx");
 
-            if (_send.Value.Type == Yolol.Execution.Type.String && _send.Value.String.Length > 0)
+            if (_send.Value.Type == Type.String && _send.Value.String.Length > 0)
                 _manager.Send(_team.Value, _send.Value.ToString());
             _send.Value = "";
 
             if (_manager.Receive(_team.Value, out var received))
                 _recv.Value = received;
+            else
+                _recv.Value = Number.Zero;
         }
 
         private class Manager

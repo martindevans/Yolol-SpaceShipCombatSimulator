@@ -2,6 +2,7 @@
 using System.Numerics;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using SwizzleMyVectors.Geometry;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -17,6 +18,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public float Radius => _radius?.Value ?? 0;
         public Vector3 Position => _position?.Value ?? Vector3.Zero;
+
+        public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

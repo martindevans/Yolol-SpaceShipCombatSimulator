@@ -59,6 +59,13 @@ namespace ShipCombatCore.Simulation.Report
                             writer.WritePropertyName("Type");
                             writer.WriteValue(recorder.Type.ToString());
 
+                            var tn = recorder.Owner.GetProperty(PropertyNames.TeamName);
+                            if (tn != null && !string.IsNullOrWhiteSpace(tn.Value))
+                            {
+                                writer.WritePropertyName("TeamName");
+                                writer.WriteValue(tn.Value);
+                            }
+
                             writer.WritePropertyName("Curves");
                             writer.WriteStartArray();
                             {
