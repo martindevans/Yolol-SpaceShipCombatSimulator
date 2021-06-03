@@ -184,8 +184,8 @@ Ships and missiles have an active radar scanner which can detect other things in
 
 Every team has a perfectly secure radio channel which can transmit strings - there is no way for enemies to eavesdrop or even interfere with radio messages.
 
- - `:radio_send` (**W**) - If set to a non-empty string the string will be sent to other radios. If several radios try to sent at once messages will be added to a queue and received on subsequent frames.
- - `:radio_recv` (**R**) - Received messages are put into this field, overwriting whatever value was there previously.
+ - `:radio_tx` (**W**) - If set to a non-empty string the string will be sent to other radios. If several radios try to sent at once all messages will be added to a queue and received on subsequent frames.
+ - `:radio_rx` (**R**) - Received messages are put into this field, overwriting whatever value was there previously.
 
 ### Warhead
 

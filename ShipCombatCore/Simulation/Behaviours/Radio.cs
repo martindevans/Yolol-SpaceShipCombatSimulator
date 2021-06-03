@@ -41,8 +41,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (ctx == null)
                 return;
 
-            _send ??= ctx.Get(":radio_send");
-            _recv ??= ctx.Get(":radio_recv");
+            _send ??= ctx.Get(":radio_tx");
+            _recv ??= ctx.Get(":radio_rx");
 
             if (_send.Value.Type == Yolol.Execution.Type.String && _send.Value.String.Length > 0)
                 _manager.Send(_team.Value, _send.Value.ToString());
