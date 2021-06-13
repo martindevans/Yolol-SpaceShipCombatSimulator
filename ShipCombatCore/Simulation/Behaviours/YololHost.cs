@@ -5,6 +5,7 @@ using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
 using Yolol.Grammar.AST;
+using Yolol.IL;
 using Yolol.IL.Compiler;
 using Yolol.IL.Extensions;
 
@@ -17,37 +18,26 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         private class CompiledProgramState
         {
-            public int ProgramCounter { get; private set; }
-            public IReadOnlyList<Func<ArraySegment<Value>, ArraySegment<Value>, int>> Lines { get; }
+            private readonly CompiledProgram _compiled;
 
-            public InternalsMap InternalsMap { get; }
-            public Value[] Internals { get; }
+            public Value[] Internals { get; private set; }
 
-            private CompiledProgramState(IReadOnlyList<Func<ArraySegment<Value>, ArraySegment<Value>, int>> lines, InternalsMap internals)
+            private CompiledProgramState(CompiledProgram compiled)
             {
-                Lines = lines;
-                ProgramCounter = 0;
+                _compiled = compiled;
 
-                InternalsMap = internals;
-                Internals = new Value[InternalsMap.Count];
-                Array.Fill(Internals, (Number)0);
+                Internals = new Value[compiled.InternalsMap.Count];
+                Array.Fill(Internals, Number.Zero);
             }
 
             public void Tick(Value[] externals)
             {
-                if (Lines.Count == 0)
-                    return;
-                if (ProgramCounter >= Lines.Count)
-                    ProgramCounter = 0;
-                if (ProgramCounter < 0)
-                    ProgramCounter = 0;
-                ProgramCounter = Lines[ProgramCounter](Internals, externals) - 1;
+                _compiled.Tick(Internals, externals);
             }
 
             public static CompiledProgramState Compile(Program program, ExternalsMap externalsMap)
             {
-                var internals = new InternalsMap();
-                return new CompiledProgramState(program.Compile(internals, externalsMap, program.Lines.Count), internals);
+                return new CompiledProgramState(program.Compile(externalsMap, program.Lines.Count));
             }
         }
 
@@ -65,7 +55,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             var compiled = new List<CompiledProgramState>();
 
-            foreach (var prog in programs)
+            foreach (var prog in programs.Where(p => p.Lines.Count > 0))
                 compiled.Add(CompiledProgramState.Compile(prog, _externalsMap));
             _compiled = compiled;
 

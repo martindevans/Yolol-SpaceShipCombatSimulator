@@ -18,10 +18,10 @@ namespace ShipCombatCore.Simulation.Report.Curves
         {
             _property = property;
 
-            _w = new BoundedFloat16Curve($"{property.Name}.w", 95);
-            _x = new BoundedFloat16Curve($"{property.Name}.x", 95);
-            _y = new BoundedFloat16Curve($"{property.Name}.y", 95);
-            _z = new BoundedFloat16Curve($"{property.Name}.z", 95);
+            _w = new BoundedFloat16Curve($"{property.Name}.w", 115);
+            _x = new BoundedFloat16Curve($"{property.Name}.x", 115);
+            _y = new BoundedFloat16Curve($"{property.Name}.y", 115);
+            _z = new BoundedFloat16Curve($"{property.Name}.z", 115);
         }
 
         public void Extend(uint ms)

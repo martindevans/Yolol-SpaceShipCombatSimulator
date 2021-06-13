@@ -22,6 +22,9 @@ namespace SpaceShipCombatSimulator
 
             [Option('b', "fleetb", HelpText = "Folder containing fleet B", Required = true)]
             public string PathB { get; [UsedImplicitly] set; }
+
+            [Option('o', "output", HelpText = "File to write replay to", Required = false, Default = null)]
+            public string? OutputPath { get; [UsedImplicitly] set; }
 #pragma warning restore 8618
         }
 
@@ -64,8 +67,10 @@ namespace SpaceShipCombatSimulator
             }
 
             Console.WriteLine(report);
-            
-            using (var file = File.Create("output.json.deflate"))
+
+            var output = options.OutputPath ?? "output.json.deflate";
+
+            using (var file = File.Create(output))
             using (var zip = new DeflateStream(file, CompressionLevel.Optimal))
             using (var stream = new StreamWriter(zip))
             using (var writer = new JsonTextWriter(stream) { Formatting = Formatting.None })
@@ -75,6 +80,7 @@ namespace SpaceShipCombatSimulator
                 Console.WriteLine($"File Size (Compressed): {ToFileSize(file.Position)}");
             }
 
+            #if DEBUG
             using (var file = File.Create("output.json"))
             using (var stream = new StreamWriter(file))
             using (var writer = new JsonTextWriter(stream) { Formatting = Formatting.Indented })
@@ -83,6 +89,7 @@ namespace SpaceShipCombatSimulator
                 writer.Flush();
                 Console.WriteLine($"File Size (Uncompressed): {ToFileSize(file.Position)}");
             }
+            #endif
         }
 
         private static string ToFileSize(long bytes)

@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
+    <Version>23.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
