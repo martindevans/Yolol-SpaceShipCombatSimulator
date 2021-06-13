@@ -69,6 +69,7 @@ Certain fields are read-only (**R**), other fields are write-only (**W**), some 
  - [Warhead](#warhead)
  - [Radar Scanner](#radar-scanner) (Fixed)
  - [Radio](#radio)
+ - [Math Helper](#math-helper)
 
 ### Yolol Chip
 
@@ -168,6 +169,7 @@ Ships and missiles have an active radar scanner which can detect other things in
  - `:radar_dir_z` (**R**) - Z element of the direction of the radar beam (world space).
 
 #### Ship And Missile
+ - `:radar_filter` (**W**) - Filters out items from the results. Any detected items whose `id` or `type` are contained in the filter string will be removed from the results list.
  - `:radar_trigger` (**RW**) - trigger a new scan when truthy. Field will be set to zero.
  - `:radar_count` (**R**) - Number of items detected in the previous scan.
  - `:radar_idx` (**W**) - Index of the item to fetch information for.
@@ -221,6 +223,9 @@ Each function reads from some registers and then puts the result into some regis
  - `"world_dir"` - Given a bearing (`a`), an elevation (`b`), a bearing axis (`cde`) and an elevation axis (`fgh`) calculate a world direction vector and store it into `abc`.
  - `"mulq"` - Multiply a quaternion (`abcd=WXYZ`) by a quaternion (`efgh=WXYZ`). Store result into `abcd`.
  - `"mulqv"` - Transform a vector (`efg=XYZ`) by a Quaternion (`abcd=WXYZ`). Store result into `efg`.
+ - `"qaxisangle"` - Create a quaternion (`abcd=WXYZ`) from a rotation axis (`abc=XYZ`) and an angle (`d=degrees`).
+ - `"qypr"` - Create a quaternion (`abcd=WXYZ`) from yaw, pitch and roll (`abc=YPR`) express in degrees.
+ - `"qinv"` - Invert a quaternion (`abcd=WXYZ`). Store result into `abcd`.
 
 ## Constants
 
