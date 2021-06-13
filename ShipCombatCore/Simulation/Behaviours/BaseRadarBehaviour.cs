@@ -113,6 +113,13 @@ namespace ShipCombatCore.Simulation.Behaviours
 
                 // Find entities along the beam
                 _lastScanData = FindEntities(_direction.Value, angle.ToRadians());
+
+                var filterVal = ctx.Get(":radar_filter").Value;
+                if (filterVal.Type == Yolol.Execution.Type.String)
+                {
+                    var filterString = filterVal.ToString();
+                    _lastScanData.RemoveAll(a => filterString.Contains(a.Detectable.Type.ToString()) || filterString.Contains(a.Detectable.ID));
+                }
             }
 
             // Output results

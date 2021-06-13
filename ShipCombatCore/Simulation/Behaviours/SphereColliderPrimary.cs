@@ -16,16 +16,18 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class SphereColliderPrimary
         : ProcessBehaviour
     {
-        private Property<float>? _radius;
-        private Property<Vector3>? _position;
+#pragma warning disable 8618
+        private Property<float> _radius;
+        private Property<Vector3> _position;
 
-        private Manager? _primaryManager;
-        private SphereColliderSecondary.Manager? _secondaryManager;
+        private Manager _primaryManager;
+        private SphereColliderSecondary.Manager _secondaryManager;
+#pragma warning restore 8618
 
-        public float Radius => _radius?.Value ?? 0;
-        public Vector3 Position => _position?.Value ?? Vector3.Zero;
+        public float Radius => _radius.Value;
+        public Vector3 Position => _position.Value;
 
-        public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
+        public BoundingBox Bounds { get; private set; }
 
         public override void Initialise(INamedDataProvider? initialisationData)
         {
@@ -43,19 +45,22 @@ namespace ShipCombatCore.Simulation.Behaviours
             base.CreateProperties(context);
         }
 
+        protected override void Initialised()
+        {
+            base.Initialised();
+
+            Bounds = new(new BoundingSphere(Position, Radius));
+        }
+
         protected override void Update(float elapsedTime)
         {
-            if (_primaryManager == null)
-                return;
-
-            var secondarys = _secondaryManager?.Items;
-            if (secondarys == null)
-                return;
-
-            foreach (var secondary in secondarys)
+            foreach (var secondary in _secondaryManager.Items)
             {
                 foreach (var primary in _primaryManager.GetColliders(secondary.Bounds))
                 {
+                    if (!primary.Bounds.Intersects(secondary.Bounds))
+                        continue;
+
                     var d = Vector3.DistanceSquared(primary.Position, secondary.Position);
                     var r = primary.Radius + secondary.Radius;
 

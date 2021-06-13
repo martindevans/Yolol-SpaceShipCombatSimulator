@@ -58,6 +58,8 @@ namespace ShipCombatCore.Name
         };
 
         private static readonly IReadOnlyList<string> String1 = new[] {
+            "Loquacious", "Profuse", "Verbose", "Gibbering", "Rambling", "Prolix",
+            "Taciturn", "Reticent", "Silent", "Secret", "Aloof", "Sullen", 
             "Gravitas", "Gravity", "Star", "Stellar", "Neutron", "Proton", "Photon", "Plasma",
             "Ethics", "Honor", "Loyalty", "Faith",
             "Love", "Lust", "Gluttony", "Greed", "Sloth", "Wrath", "Envy", "Pride", "Acedia", "Vainglory", "Vanity", "Blasphemy",

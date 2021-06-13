@@ -22,7 +22,7 @@ namespace ShipCombatCore.Simulation
         private readonly string _name1;
 
         public static readonly ushort MillisecondsPerTick = 10;
-        public static readonly ulong SimulationDuration = (ulong)(TimeSpan.FromMinutes(25).TotalMilliseconds / MillisecondsPerTick);
+        public static readonly ulong SimulationDuration = (ulong)(TimeSpan.FromMinutes(20).TotalMilliseconds / MillisecondsPerTick);
 
         private readonly Scene _scene;
 
@@ -88,10 +88,10 @@ namespace ShipCombatCore.Simulation
             var r = new Random();
 
             // Place asteroids around the center in a sphere
-            for (var i = 0; i < 40; i++)
+            for (var i = 0; i < 25; i++)
             {
                 var dist = (float)(4500 * r.NextDouble());
-                if (dist > 250)
+                if (dist > 350)
                 {
                     var pos = Myre.Extensions.RandomExtensions.RandomNormalVector(r) * dist * new Vector3(1, 0.5f, 1);
                     var rot = Quaternion.Normalize(new Quaternion(

@@ -52,6 +52,7 @@ namespace SpaceShipCombatSimulator
             }
 
             var sim = new Simulation(a, Path.GetFileNameWithoutExtension(options.PathA), b, Path.GetFileNameWithoutExtension(options.PathB));
+            Console.WriteLine("Created Scene");
 
             Report? report;
             using (var loga = File.CreateText("CaptainsLog_A.txt"))

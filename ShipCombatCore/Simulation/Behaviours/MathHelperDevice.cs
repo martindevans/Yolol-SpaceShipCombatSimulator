@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using MathHelperRedux;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Helpers;
@@ -65,24 +66,60 @@ namespace ShipCombatCore.Simulation.Behaviours
                 MulQuat(_params);
             else if (_mode.Value.Equals("mulqv"))
                 MulQuatVec(_params);
+            else if (_mode.Value.Equals("qaxisangle"))
+                QuatAxisAngle(_params);
+            else if (_mode.Value.Equals("qypr"))
+                QuatYPR(_params);
+            else if (_mode.Value.Equals("qinv"))
+                QuatInv(_params);
 
             _mode.Value = "";
         }
 
+        private static void QuatInv(IReadOnlyList<YololVariable> parameters)
+        {
+            var q = LoadQuaternion(parameters, 0, 1, 2, 3);
+            var qinv = Quaternion.Inverse(q);
+
+            parameters[0].Value = (Number)qinv.W;
+            parameters[1].Value = (Number)qinv.X;
+            parameters[2].Value = (Number)qinv.Y;
+            parameters[3].Value = (Number)qinv.Z;
+        }
+
+        private static void QuatAxisAngle(IReadOnlyList<YololVariable> parameters)
+        {
+            var v = LoadVector3(parameters, 0, 1, 2);
+            var a = LoadSingle(parameters, 4);
+
+            var q = Quaternion.CreateFromAxisAngle(v, a.ToRadians());
+
+            parameters[0].Value = (Number)q.W;
+            parameters[1].Value = (Number)q.X;
+            parameters[2].Value = (Number)q.Y;
+            parameters[3].Value = (Number)q.Z;
+        }
+
+        private static void QuatYPR(IReadOnlyList<YololVariable> parameters)
+        {
+            var v = LoadVector3(parameters, 0, 1, 2);
+
+            var q = Quaternion.CreateFromYawPitchRoll(
+                v.X.ToRadians(),
+                v.Y.ToRadians(),
+                v.Z.ToRadians()
+            );
+
+            parameters[0].Value = (Number)q.W;
+            parameters[1].Value = (Number)q.X;
+            parameters[2].Value = (Number)q.Y;
+            parameters[3].Value = (Number)q.Z;
+        }
+
         private static void MulQuat(IReadOnlyList<YololVariable> parameters)
         {
-            var q1 = new Quaternion(
-                YololValue.Number(parameters[0].Value),
-                YololValue.Number(parameters[1].Value),
-                YololValue.Number(parameters[2].Value),
-                YololValue.Number(parameters[3].Value)
-            );
-            var q2 = new Quaternion(
-                YololValue.Number(parameters[4].Value),
-                YololValue.Number(parameters[5].Value),
-                YololValue.Number(parameters[6].Value),
-                YololValue.Number(parameters[7].Value)
-            );
+            var q1 = LoadQuaternion(parameters, 0, 1, 2, 3);
+            var q2 =LoadQuaternion(parameters, 4, 5, 6, 7);
 
             var m = q1 * q2;
 
@@ -158,6 +195,12 @@ namespace ShipCombatCore.Simulation.Behaviours
                 YololValue.Number(parameters[y].Value),
                 YololValue.Number(parameters[z].Value)
             );
+        }
+
+        private static float LoadSingle(IReadOnlyList<YololVariable> parameters, int v)
+        {
+            return YololValue.Number(parameters[v].Value);
+
         }
 
         public class Manager

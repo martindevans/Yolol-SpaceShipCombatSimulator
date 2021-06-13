@@ -13,11 +13,13 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class SphereColliderSecondary
         : Behaviour
     {
-        private Property<float>? _radius;
-        private Property<Vector3>? _position;
+#pragma warning disable 8618
+        private Property<float> _radius;
+        private Property<Vector3> _position;
+#pragma warning restore 8618
 
-        public float Radius => _radius?.Value ?? 0;
-        public Vector3 Position => _position?.Value ?? Vector3.Zero;
+        public float Radius => _radius.Value;
+        public Vector3 Position => _position.Value;
 
         public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
 

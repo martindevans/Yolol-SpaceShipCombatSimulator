@@ -62,7 +62,11 @@ namespace ShipCombatCore.Model
                 var dirname = Path.GetFileName(subdirectory);
                 if (dirname.Equals("data", StringComparison.OrdinalIgnoreCase))
                 {
-                    foreach (var file in Directory.GetFiles(subdirectory, "*.txt"))
+                    var txts = Directory.GetFiles(subdirectory, "*.txt");
+                    var yolols = Directory.GetFiles(subdirectory, "*.yolol");
+                    var files = txts.Concat(yolols);
+
+                    foreach (var file in files)
                     {
                         var name = Path.GetFileNameWithoutExtension(file);
                         var content = File.ReadAllText(file);
