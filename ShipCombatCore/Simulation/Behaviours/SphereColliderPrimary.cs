@@ -30,7 +30,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         private readonly HashSet<SphereColliderPrimary> _queryResults = new();
 
-        public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
+        public BoundingBox Bounds { get; private set; }
 
         public override void Initialise(INamedDataProvider? initialisationData)
         {
@@ -38,6 +38,11 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             _primaryManager = Owner.Scene!.GetManager<Manager>();
             _secondaryManager = Owner.Scene!.GetManager<SphereColliderSecondary.Manager>();
+        }
+
+        protected void InitialiseBounds()
+        {
+            Bounds = new(new BoundingSphere(Position, Radius));
         }
 
         public override void CreateProperties(Entity.ConstructionContext context)
@@ -95,6 +100,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             {
                 base.Add(behaviour);
 
+                behaviour.InitialiseBounds();
                 var min = ToBucket(behaviour.Bounds.Min);
                 var max = ToBucket(behaviour.Bounds.Max);
 
