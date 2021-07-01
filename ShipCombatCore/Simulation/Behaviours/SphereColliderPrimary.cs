@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
-using HandyCollections.Geometry;
 using JetBrains.Annotations;
+using Myre;
 using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
@@ -27,14 +28,16 @@ namespace ShipCombatCore.Simulation.Behaviours
         public float Radius => _radius.Value;
         public Vector3 Position => _position.Value;
 
-        public BoundingBox Bounds { get; private set; }
+        private readonly HashSet<SphereColliderPrimary> _queryResults = new();
+
+        public BoundingBox Bounds => new(new BoundingSphere(Position, Radius));
 
         public override void Initialise(INamedDataProvider? initialisationData)
         {
             base.Initialise(initialisationData);
 
-            _primaryManager = Owner.Scene?.GetManager<Manager>();
-            _secondaryManager = Owner.Scene?.GetManager<SphereColliderSecondary.Manager>();
+            _primaryManager = Owner.Scene!.GetManager<Manager>();
+            _secondaryManager = Owner.Scene!.GetManager<SphereColliderSecondary.Manager>();
         }
 
         public override void CreateProperties(Entity.ConstructionContext context)
@@ -45,26 +48,19 @@ namespace ShipCombatCore.Simulation.Behaviours
             base.CreateProperties(context);
         }
 
-        protected override void Initialised()
-        {
-            base.Initialised();
-
-            Bounds = new(new BoundingSphere(Position, Radius));
-        }
-
         protected override void Update(float elapsedTime)
         {
             foreach (var secondary in _secondaryManager.Items)
             {
-                foreach (var primary in _primaryManager.GetColliders(secondary.Bounds))
-                {
-                    if (!primary.Bounds.Intersects(secondary.Bounds))
-                        continue;
+                _queryResults.Clear();
+                _primaryManager.GetColliders(secondary.Bounds, _queryResults);
 
-                    var d = Vector3.DistanceSquared(primary.Position, secondary.Position);
+                foreach (var primary in _queryResults)
+                {
+                    var d = Vector3.Distance(primary.Position, secondary.Position);
                     var r = primary.Radius + secondary.Radius;
 
-                    if (d <= r * r)
+                    if (d <= r)
                     {
                         // If the impacting object has velocity bounce off
                         var vel = secondary.Owner.GetProperty(PropertyNames.Velocity);
@@ -83,32 +79,81 @@ namespace ShipCombatCore.Simulation.Behaviours
         private class Manager
             : Manager<SphereColliderPrimary>
         {
-            private readonly Octree<SphereColliderPrimary> _octree;
+            private const float BucketSize = 275;
+            private readonly Dictionary<Int3, List<SphereColliderPrimary>> _buckets = new();
 
-            public Manager()
+            private static Int3 ToBucket(Vector3 position)
             {
-                _octree = new Octree<SphereColliderPrimary>(new BoundingBox(new Vector3(-20000), new Vector3(30000)), 1, 8);
+                return new Int3(
+                    (int)MathF.Floor(position.X / BucketSize),
+                    (int)MathF.Floor(position.Y / BucketSize),
+                    (int)MathF.Floor(position.Z / BucketSize)
+                );
             }
 
             public override void Add(SphereColliderPrimary behaviour)
             {
                 base.Add(behaviour);
 
-                _octree.Insert(behaviour.Bounds, behaviour);
+                var min = ToBucket(behaviour.Bounds.Min);
+                var max = ToBucket(behaviour.Bounds.Max);
+
+                for (var i = min.X; i <= max.X; i++)
+                {
+                    for (var j = min.Y; i <= max.Y; i++)
+                    {
+                        for (var k = min.Z; i <= max.Z; i++)
+                        {
+                            if (!_buckets.TryGetValue(new Int3(i, j, k), out var list))
+                            {
+                                list = new List<SphereColliderPrimary>();
+                                _buckets[new Int3(i, j, k)] = list;
+                            }
+
+                            list.Add(behaviour);
+                        }
+                    }
+                }
             }
 
-            public IEnumerable<SphereColliderPrimary> GetColliders(BoundingBox bounds)
+            public void GetColliders(BoundingBox bounds, ISet<SphereColliderPrimary> results)
             {
-                return _octree.Intersects(bounds);
+                var min = ToBucket(bounds.Min);
+                var max = ToBucket(bounds.Max);
+
+                for (var i = min.X; i <= max.X; i++)
+                {
+                    for (var j = min.Y; i <= max.Y; i++)
+                    {
+                        for (var k = min.Z; i <= max.Z; i++)
+                        {
+                            if (_buckets.TryGetValue(new Int3(i, j, k), out var list))
+                            {
+                                results.UnionWith(list);
+                            }
+                        }
+                    }
+                }
             }
 
             public override bool Remove(SphereColliderPrimary behaviour)
             {
-                var removed = base.Remove(behaviour);
-                if (removed)
-                    _octree.Remove(behaviour.Bounds, behaviour);
+                var min = ToBucket(behaviour.Bounds.Min);
+                var max = ToBucket(behaviour.Bounds.Max);
 
-                return removed;
+                for (var i = min.X; i <= max.X; i++)
+                {
+                    for (var j = min.Y; i <= max.Y; i++)
+                    {
+                        for (var k = min.Z; i <= max.Z; i++)
+                        {
+                            if (_buckets.TryGetValue(new Int3(i, j, k), out var list))
+                                list.Add(behaviour);
+                        }
+                    }
+                }
+
+                return true;
             }
         }
     }
