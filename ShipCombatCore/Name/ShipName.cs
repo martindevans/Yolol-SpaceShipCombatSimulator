@@ -76,7 +76,8 @@ namespace ShipCombatCore.Name
             "Vindictive", "Cruel", "Malicious", "Merciless", "Resentful", "Grim", "Avenging", "Malignant", "Venomous", "Unrelenting", "Nervous", "Prosthetic",
             "Cylon", "Collective", "Frozenbyte",
             "Eternal", "Neverending", "Everlasting", "Endless", "Perpetual", "Immutable", "Immortal",
-            "Desperate", "Bold", "Daring", "Frantic", "Frenzied", "Furious", "Violent", "Audacious", "Scandalous", "Wild"
+            "Desperate", "Bold", "Daring", "Frantic", "Frenzied", "Furious", "Violent", "Audacious", "Scandalous", "Wild",
+            "Leonidas's", "Hannibal's", "Saladin's", "Khan's", "Nelson's", "Wellington's", "Yamamoto's", 
         };
 
         private static readonly IReadOnlyList<string> String2 = new[] {
