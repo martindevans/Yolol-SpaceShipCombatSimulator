@@ -154,9 +154,9 @@ namespace ShipCombatCore.Simulation.Behaviours
                 // Fire gun
                 var trigger = ctx.Get(_gunTriggerName);
                 var t = trigger.Value;
-                if (_cooldownTime <= 0 && t.Type == Yolol.Execution.Type.Number && t.Number > 0) 
+                if (_cooldownTime <= 0 && t.Type == Yolol.Execution.Type.Number && t.Number > (Number)0) 
                 {
-                    trigger.Value = t - 1;
+                    trigger.Value = t - (Number)1;
                     _cooldownTime = CooldownTime;
                     ready.Value = (Number)false;
 

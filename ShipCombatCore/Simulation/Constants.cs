@@ -45,9 +45,7 @@ namespace ShipCombatCore.Simulation
 
             foreach (var field in fields)
             {
-                var variable = ctx.MaybeGet($":const_{field.Name}");
-                if (variable == null)
-                    continue;
+                var variable = ctx.Get($":const_{field.Name}");
 
                 var value = field.GetValue(null);
 

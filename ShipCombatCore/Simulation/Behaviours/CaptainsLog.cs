@@ -17,7 +17,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 #pragma warning restore 8618
 
         private SceneLogger? _logger;
-        private YololVariable? _log;
+        private IVariable? _log;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -49,7 +49,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                 return;
 
             _logger.Log(_team.Value, _id.Value ?? "?", v.String);
-            _log.Value = 0;
+            _log.Value = (Number)0;
         }
 
         public class Manager

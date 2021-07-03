@@ -4,6 +4,7 @@ using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
 using ShipCombatCore.Simulation.Report.Curves;
+using Yolol.Execution;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -22,13 +23,13 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Vector3PositionPropertyCompoundCurve _sphereColorCurve;
 #pragma warning restore 8618
 
-        private YololVariable? _spherePosXVar;
-        private YololVariable? _spherePosYVar;
-        private YololVariable? _spherePosZVar;
-        private YololVariable? _sphereRadVar;
-        private YololVariable? _sphereRadColRVar;
-        private YololVariable? _sphereRadColGVar;
-        private YololVariable? _sphereRadColBVar;
+        private IVariable? _spherePosXVar;
+        private IVariable? _spherePosYVar;
+        private IVariable? _spherePosZVar;
+        private IVariable? _sphereRadVar;
+        private IVariable? _sphereRadColRVar;
+        private IVariable? _sphereRadColGVar;
+        private IVariable? _sphereRadColBVar;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

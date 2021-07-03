@@ -16,14 +16,14 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Vector3> _angularVelocity;
 #pragma warning restore 8618
 
-        private YololVariable? _gyrow;
-        private YololVariable? _gyrox;
-        private YololVariable? _gyroy;
-        private YololVariable? _gyroz;
+        private IVariable? _gyrow;
+        private IVariable? _gyrox;
+        private IVariable? _gyroy;
+        private IVariable? _gyroz;
 
-        private YololVariable? _angvelx;
-        private YololVariable? _angvely;
-        private YololVariable? _angvelz;
+        private IVariable? _angvelx;
+        private IVariable? _angvely;
+        private IVariable? _angvelz;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

@@ -15,18 +15,18 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Vector3> _position;
 #pragma warning restore 8618
 
-        private YololVariable? _accelx;
-        private YololVariable? _accely;
-        private YololVariable? _accelz;
+        private IVariable? _accelx;
+        private IVariable? _accely;
+        private IVariable? _accelz;
         private Vector3 _prevVel;
 
-        private YololVariable? _velx;
-        private YololVariable? _vely;
-        private YololVariable? _velz;
+        private IVariable? _velx;
+        private IVariable? _vely;
+        private IVariable? _velz;
 
-        private YololVariable? _posx;
-        private YololVariable? _posy;
-        private YololVariable? _posz;
+        private IVariable? _posx;
+        private IVariable? _posy;
+        private IVariable? _posz;
 
         private Vector3? _initialPosition;
 

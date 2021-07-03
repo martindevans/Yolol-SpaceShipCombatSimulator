@@ -21,9 +21,9 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Vector3> _torque;
 #pragma warning restore 8618
 
-        private YololVariable? _torqueX;
-        private YololVariable? _torqueY;
-        private YololVariable? _torqueZ;
+        private IVariable? _torqueX;
+        private IVariable? _torqueY;
+        private IVariable? _torqueZ;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

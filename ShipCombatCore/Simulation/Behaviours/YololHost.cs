@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
@@ -20,7 +21,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         {
             private readonly CompiledProgram _compiled;
 
-            public Value[] Internals { get; private set; }
+            public Value[] Internals { get; }
 
             private CompiledProgramState(CompiledProgram compiled)
             {
@@ -45,7 +46,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private readonly ExternalsMap _externalsMap;
         private readonly Value[] _externals;
 
-        private readonly Dictionary<string, YololVariable> _cache = new();
+        private readonly Dictionary<string, IVariable> _cache = new();
 
         private readonly List<CompiledProgramState> _compiled;
 
@@ -112,62 +113,70 @@ namespace ShipCombatCore.Simulation.Behaviours
                 return 1;
         }
 
-        public YololVariable Get(string name)
+        public IVariable Get(string name)
         {
+            if (!name.StartsWith(":"))
+                throw new ArgumentException($"`{name}` is not an external variable");
+
             name = name.ToLowerInvariant();
 
             if (!_cache.TryGetValue(name, out var v))
             {
-                v = MaybeGet(name) ?? new YololVariable(_externals, -1);
+                v = ConstructVariable(name);
                 _cache[name] = v;
             }
             return v;
         }
 
-        public YololVariable? MaybeGet(string name)
+        private IVariable ConstructVariable(string name)
         {
-            name = name.ToLowerInvariant();
-
-            if (!name.StartsWith(":"))
-                throw new ArgumentException($"`{name}` is not an external variable");
-
-            if (!_cache.TryGetValue(name, out var v))
-            {
-                v = !_externalsMap.TryGetValue(name, out var idx) ? null : new YololVariable(_externals, idx);
-                if (v != null)
-                    _cache[name] = v;
-            }
-            return v;
+            return _externalsMap.TryGetValue(name, out var idx)
+                  ? new ArrayYololVariable(_externals, idx)
+                  : new StandaloneYololVariable(name);
         }
-    }
 
-    public class YololVariable
-        : IVariable
-    {
-        private readonly Value[] _values;
-        private readonly int _index;
-
-        public Value Value
+        private class ArrayYololVariable
+            : IVariable
         {
-            get
+            private readonly Value[] _values;
+            private readonly int _index;
+
+            public Value Value
             {
-                if (_index == -1)
-                    return new Value(false);
-                else
-                    return _values[_index];
+                get
+                {
+                    if (_index == -1)
+                        return new Value(false);
+                    else
+                        return _values[_index];
+                }
+                set
+                {
+                    if (_index == -1)
+                        return;
+                    _values[_index] = value;
+                }
             }
-            set
+
+            public ArrayYololVariable(Value[] values, int index)
             {
-                if (_index == -1)
-                    return;
-                _values[_index] = value;
+                _values = values;
+                _index = index;
             }
         }
 
-        public YololVariable(Value[] values, int index)
+        private class StandaloneYololVariable
+            : IVariable
         {
-            _values = values;
-            _index = index;
+            [UsedImplicitly] private readonly string _name;
+
+            public Value Value { get; set; }
+
+            public StandaloneYololVariable(string name)
+            {
+                _name = name;
+                Value = Number.Zero;
+            }
         }
     }
 

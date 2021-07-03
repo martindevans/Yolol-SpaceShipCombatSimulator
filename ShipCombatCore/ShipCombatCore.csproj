@@ -14,7 +14,7 @@
     <PackageReference Include="Myre.Entities" Version="14.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="SwizzleMyVectors" Version="9.0.0" />
-    <PackageReference Include="Yolol.IL" Version="8.0.0" />
+    <PackageReference Include="Yolol.IL" Version="9.0.0" />
   </ItemGroup>
 
 </Project>

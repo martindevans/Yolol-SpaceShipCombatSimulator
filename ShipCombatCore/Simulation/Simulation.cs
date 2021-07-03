@@ -65,14 +65,8 @@ namespace ShipCombatCore.Simulation
                 // Load up data
                 var ctx = e.GetProperty(PropertyNames.YololContext)?.Value;
                 if (ctx != null)
-                {
                     foreach (var (k, v) in fleet.Data)
-                    {
-                        var p = ctx.MaybeGet(k);
-                        if (p != null)
-                            p.Value = v;
-                    }
-                }
+                        ctx.Get(k).Value = v;
             }
         }
 

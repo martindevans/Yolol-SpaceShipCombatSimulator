@@ -2,6 +2,7 @@
 using MathHelperRedux;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using Yolol.Execution;
 using Type = Yolol.Execution.Type;
 
 namespace ShipCombatCore.Simulation.Behaviours
@@ -25,7 +26,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Quaternion> _orientation;
 #pragma warning restore 8618
 
-        private YololVariable? _throttle;
+        private IVariable? _throttle;
         
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -80,7 +81,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (throttle.Type != Type.Number)
                 return 0;
 
-            if (throttle <= 0)
+            if (throttle <= (Number)0)
                 return 0;
 
             return MathHelper.Clamp((float)throttle.Number, 0, 1);

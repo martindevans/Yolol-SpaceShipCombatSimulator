@@ -1,6 +1,7 @@
 ﻿using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using Yolol.Execution;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -12,8 +13,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<YololContext> _context;
 #pragma warning restore 8618
 
-        private YololVariable? _prime;
-        private YololVariable? _trigger;
+        private IVariable? _prime;
+        private IVariable? _trigger;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

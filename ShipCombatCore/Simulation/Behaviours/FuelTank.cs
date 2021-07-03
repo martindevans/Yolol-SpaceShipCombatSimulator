@@ -15,7 +15,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float> _fuelLitersInTank;
 #pragma warning restore 8618
 
-        private YololVariable? _fuel;
+        private IVariable? _fuel;
         
         public override void CreateProperties(Entity.ConstructionContext context)
         {

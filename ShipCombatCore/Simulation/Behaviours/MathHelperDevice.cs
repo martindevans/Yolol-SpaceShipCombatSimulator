@@ -18,8 +18,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Quaternion> _orientation;
 #pragma warning restore 8618
 
-        private YololVariable? _mode;
-        private YololVariable[]? _params;
+        private IVariable? _mode;
+        private IVariable[]? _params;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -76,7 +76,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _mode.Value = "";
         }
 
-        private static void QuatInv(IReadOnlyList<YololVariable> parameters)
+        private static void QuatInv(IReadOnlyList<IVariable> parameters)
         {
             var q = LoadQuaternion(parameters, 0, 1, 2, 3);
             var qinv = Quaternion.Inverse(q);
@@ -87,7 +87,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[3].Value = (Number)qinv.Z;
         }
 
-        private static void QuatAxisAngle(IReadOnlyList<YololVariable> parameters)
+        private static void QuatAxisAngle(IReadOnlyList<IVariable> parameters)
         {
             var v = LoadVector3(parameters, 0, 1, 2);
             var a = LoadSingle(parameters, 4);
@@ -100,7 +100,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[3].Value = (Number)q.Z;
         }
 
-        private static void QuatYPR(IReadOnlyList<YololVariable> parameters)
+        private static void QuatYPR(IReadOnlyList<IVariable> parameters)
         {
             var v = LoadVector3(parameters, 0, 1, 2);
 
@@ -116,7 +116,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[3].Value = (Number)q.Z;
         }
 
-        private static void MulQuat(IReadOnlyList<YololVariable> parameters)
+        private static void MulQuat(IReadOnlyList<IVariable> parameters)
         {
             var q1 = LoadQuaternion(parameters, 0, 1, 2, 3);
             var q2 =LoadQuaternion(parameters, 4, 5, 6, 7);
@@ -129,7 +129,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[3].Value = (Number)m.Z;
         }
 
-        private static void MulQuatVec(IReadOnlyList<YololVariable> parameters)
+        private static void MulQuatVec(IReadOnlyList<IVariable> parameters)
         {
             var q1 = LoadQuaternion(parameters, 0, 1, 2, 3);
             var v1 = LoadVector3(parameters, 4, 5, 6);
@@ -141,13 +141,13 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[6].Value = (Number)m.Z;
         }
 
-        private static void Reset(IReadOnlyList<YololVariable> parameters)
+        private static void Reset(IReadOnlyList<IVariable> parameters)
         {
             foreach (var variable in parameters)
-                variable.Value = 0;
+                variable.Value = (Number)0;
         }
 
-        private static void Add(IReadOnlyList<YololVariable> parameters)
+        private static void Add(IReadOnlyList<IVariable> parameters)
         {
             var acc = 0f;
 
@@ -157,7 +157,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[0].Value = (Number)acc;
         }
 
-        private void WorldDir(IReadOnlyList<YololVariable> parameters)
+        private void WorldDir(IReadOnlyList<IVariable> parameters)
         {
             var bearing = YololValue.Number(parameters[0].Value, 0, 360);
             var elevation = YololValue.Number(parameters[1].Value, 0, 360);
@@ -178,7 +178,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[2].Value = (Number)dir.Z;
         }
 
-        private static Quaternion LoadQuaternion(IReadOnlyList<YololVariable> parameters, int w, int x, int y, int z)
+        private static Quaternion LoadQuaternion(IReadOnlyList<IVariable> parameters, int w, int x, int y, int z)
         {
             return new Quaternion(
                 YololValue.Number(parameters[w].Value),
@@ -188,7 +188,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             );
         }
 
-        private static Vector3 LoadVector3(IReadOnlyList<YololVariable> parameters, int x, int y, int z)
+        private static Vector3 LoadVector3(IReadOnlyList<IVariable> parameters, int x, int y, int z)
         {
             return new Vector3(
                 YololValue.Number(parameters[x].Value),
@@ -197,7 +197,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             );
         }
 
-        private static float LoadSingle(IReadOnlyList<YololVariable> parameters, int v)
+        private static float LoadSingle(IReadOnlyList<IVariable> parameters, int v)
         {
             return YololValue.Number(parameters[v].Value);
 

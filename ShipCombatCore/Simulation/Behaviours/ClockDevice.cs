@@ -14,8 +14,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         private double _elapsed;
 
-        private YololVariable? _clock;
-        private YololVariable? _clockDt;
+        private IVariable? _clock;
+        private IVariable? _clockDt;
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {

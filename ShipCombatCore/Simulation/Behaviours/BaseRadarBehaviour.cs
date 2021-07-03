@@ -95,7 +95,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             var trigger = ctx.Get(":radar_trigger");
             if (trigger.Value.ToBool())
             {
-                trigger.Value = 0;
+                trigger.Value = (Number)0;
 
                 var elevation = Elevation(ctx);
                 var bearing = Bearing(ctx);
@@ -134,7 +134,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (idx < 0 || idx >= _lastScanData.Count)
             {
                 id.Value = "";
-                dist.Value = 0;
+                dist.Value = (Number)0;
                 type.Value = "";
                 _target.Value = Vector3.Zero;
             }

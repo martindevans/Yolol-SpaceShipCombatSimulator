@@ -22,7 +22,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<float> _cosmicRadiation;
 #pragma warning restore 8618
 
-        private YololVariable? _rad;
+        private IVariable? _rad;
 
         private IReadOnlyList<IDamageReceiver>? _damageReceivers;
 

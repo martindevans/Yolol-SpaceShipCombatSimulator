@@ -17,8 +17,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Manager _manager;
 #pragma warning restore 8618
 
-        private YololVariable? _send;
-        private YololVariable? _recv;
+        private IVariable? _send;
+        private IVariable? _recv;
         
 
         public override void CreateProperties(Entity.ConstructionContext context)

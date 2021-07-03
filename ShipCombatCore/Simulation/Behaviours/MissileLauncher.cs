@@ -16,7 +16,6 @@ namespace ShipCombatCore.Simulation.Behaviours
         private const ushort CooldownTime = (ushort)Constants.MissileRefireTime;
         private float _cooldownTime = CooldownTime;
 
-#pragma warning disable 8618
         private Property<uint> _team;
 
         private Property<YololContext> _context;
@@ -27,12 +26,11 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<Vector3> _angularVelocity;
 
         private Property<uint> _ammo;
-#pragma warning restore 8618
 
-        private YololVariable? _trigger;
-        private YololVariable? _code;
-        private YololVariable? _ready;
-        private YololVariable? _ammoVar;
+        private IVariable? _trigger;
+        private IVariable? _code;
+        private IVariable? _ready;
+        private IVariable? _ammoVar;
 
         private readonly MissileEntity _missileFactory;
 
@@ -62,7 +60,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         protected override void Update(float elapsedTime)
         {
             _ammoVar ??= _context.Value!.Get(":missile_ammo");
-            _ammoVar.Value = _ammo.Value;
+            _ammoVar.Value = (Number)(int)_ammo.Value;
 
             _ready ??= _context.Value!.Get(":missile_ready");
             _ready.Value = Number.Zero;
@@ -77,7 +75,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _ready.Value = Number.One;
 
             _trigger ??= _context.Value!.Get(":missile_trigger");
-            if (_trigger.Value <= 0)
+            if (_trigger.Value <= (Number)0)
                 return;
 
             _code ??= _context.Value!.Get(":missile_code");
@@ -88,7 +86,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             Owner.Scene?.Add(_missileFactory.Create(_team.Value, _position.Value, _velocity.Value, _orientation.Value, _angularVelocity.Value, program));
             _trigger.Value--;
             _ammo.Value--;
-            _ammoVar.Value = _ammo.Value;
+            _ammoVar.Value = (Number)(int)_ammo.Value;
 
             _cooldownTime = CooldownTime;
             _ready.Value = (Number)false;

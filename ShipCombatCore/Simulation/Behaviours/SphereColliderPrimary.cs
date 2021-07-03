@@ -84,7 +84,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private class Manager
             : Manager<SphereColliderPrimary>
         {
-            private const float BucketSize = 275;
+            private const float BucketSize = 250;
             private readonly Dictionary<Int3, List<SphereColliderPrimary>> _buckets = new();
 
             private static Int3 ToBucket(Vector3 position)
@@ -106,9 +106,9 @@ namespace ShipCombatCore.Simulation.Behaviours
 
                 for (var i = min.X; i <= max.X; i++)
                 {
-                    for (var j = min.Y; i <= max.Y; i++)
+                    for (var j = min.Y; j <= max.Y; j++)
                     {
-                        for (var k = min.Z; i <= max.Z; i++)
+                        for (var k = min.Z; k <= max.Z; k++)
                         {
                             if (!_buckets.TryGetValue(new Int3(i, j, k), out var list))
                             {
@@ -129,9 +129,9 @@ namespace ShipCombatCore.Simulation.Behaviours
 
                 for (var i = min.X; i <= max.X; i++)
                 {
-                    for (var j = min.Y; i <= max.Y; i++)
+                    for (var j = min.Y; j <= max.Y; j++)
                     {
-                        for (var k = min.Z; i <= max.Z; i++)
+                        for (var k = min.Z; k <= max.Z; k++)
                         {
                             if (_buckets.TryGetValue(new Int3(i, j, k), out var list))
                             {
