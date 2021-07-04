@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using MathHelperRedux;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Helpers;
 using Yolol.Execution;
+using Type = Yolol.Execution.Type;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -50,30 +52,110 @@ namespace ShipCombatCore.Simulation.Behaviours
                     ctx.Get(":mathhelper_h"),
                     ctx.Get(":mathhelper_i"),
                     ctx.Get(":mathhelper_j"),
+                    ctx.Get(":mathhelper_k"),
+                    ctx.Get(":mathhelper_l"),
+                    ctx.Get(":mathhelper_m"),
+                    ctx.Get(":mathhelper_n"),
+                    ctx.Get(":mathhelper_o"),
+                    ctx.Get(":mathhelper_p"),
+                    ctx.Get(":mathhelper_q"),
+                    ctx.Get(":mathhelper_r"),
+                    ctx.Get(":mathhelper_s"),
+                    ctx.Get(":mathhelper_t"),
+                    ctx.Get(":mathhelper_u"),
+                    ctx.Get(":mathhelper_v"),
+                    ctx.Get(":mathhelper_w"),
+                    ctx.Get(":mathhelper_x"),
+                    ctx.Get(":mathhelper_y"),
+                    ctx.Get(":mathhelper_z"),
                 };
             }
 
             if (_mode.Value.Type != Type.String || _mode.Value == "")
                 return;
 
-            if (_mode.Value.Equals("reset"))
-                Reset(_params);
-            else if (_mode.Value.Equals("add"))
-                Add(_params);
-            else if (_mode.Value.Equals("world_dir"))
-                WorldDir(_params);
-            else if (_mode.Value.Equals("mulq"))
-                MulQuat(_params);
-            else if (_mode.Value.Equals("mulqv"))
-                MulQuatVec(_params);
-            else if (_mode.Value.Equals("qaxisangle"))
-                QuatAxisAngle(_params);
-            else if (_mode.Value.Equals("qypr"))
-                QuatYPR(_params);
-            else if (_mode.Value.Equals("qinv"))
-                QuatInv(_params);
+            Action<IReadOnlyList<IVariable>> func = _mode.Value.ToString() switch
+            {
+                "reset" => Reset,
+                "shuffle" => Shuffle,
+                "add" => Add,
+                "world_dir" => WorldDir,
+                "mulqq" or "mulq" => MulQuatQuat,
+                "mulqv" => MulQuatVec,
+                "qaxisangle" => QuatAxisAngle,
+                "qypr" => QuatYPR,
+                "qinv" => QuatInv,
+                "dotvv" => DotVecVec,
+                "crossvv" => CrossVecVec,
+                "dotqq" => DotQuatQuat,
+                _ => _ => { },
+            };
+            func(_params);
 
             _mode.Value = "";
+        }
+
+        private static void Shuffle(IReadOnlyList<IVariable> parameters)
+        {
+            var shuffle = parameters[25];
+            if (shuffle.Value.Type == Type.Number)
+                return;
+
+            // Copy all values into temps, so by default nothing changes
+            var temp = new Value[parameters.Count];
+            for (var i = 0; i < parameters.Count; i++)
+                temp[i] = parameters[i].Value;
+
+            // Apply all commands one by one
+            var index = 0;
+            foreach (var character in shuffle.Value.ToString())
+            {
+                if (char.IsLetter(character))
+                {
+                    // If it's a letter copy that item into this slot
+                    var idx = char.ToLowerInvariant(character) - 97;
+                    temp[index] = parameters[idx].Value;
+                }
+                else if (char.IsDigit(character))
+                {
+                    var val = character - 48;
+                    temp[index] = (Number)val;
+                }
+
+                index++;
+            }
+
+            // Copy all temps back into values
+            for (var i = 0; i < parameters.Count; i++)
+                parameters[i].Value = temp[i];
+        }
+
+        private static void DotVecVec(IReadOnlyList<IVariable> parameters)
+        {
+            var v1 = LoadVector3(parameters, 0, 1, 2);
+            var v2 = LoadVector3(parameters, 4, 5, 6);
+
+            parameters[3].Value = (Number)Vector3.Dot(v1, v2);
+        }
+
+        private static void CrossVecVec(IReadOnlyList<IVariable> parameters)
+        {
+            var v1 = LoadVector3(parameters, 0, 1, 2);
+            var v2 = LoadVector3(parameters, 4, 5, 6);
+
+            var r = Vector3.Cross(v1, v2);
+
+            parameters[7].Value = (Number)r.X;
+            parameters[8].Value = (Number)r.Y;
+            parameters[9].Value = (Number)r.Z;
+        }
+
+        private static void DotQuatQuat(IReadOnlyList<IVariable> parameters)
+        {
+            var q1 = LoadQuaternion(parameters, 0, 1, 2, 3);
+            var q2 = LoadQuaternion(parameters, 4, 5, 6, 7);
+
+            parameters[8].Value = (Number)Quaternion.Dot(q1, q2);
         }
 
         private static void QuatInv(IReadOnlyList<IVariable> parameters)
@@ -116,7 +198,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             parameters[3].Value = (Number)q.Z;
         }
 
-        private static void MulQuat(IReadOnlyList<IVariable> parameters)
+        private static void MulQuatQuat(IReadOnlyList<IVariable> parameters)
         {
             var q1 = LoadQuaternion(parameters, 0, 1, 2, 3);
             var q2 =LoadQuaternion(parameters, 4, 5, 6, 7);
@@ -181,10 +263,10 @@ namespace ShipCombatCore.Simulation.Behaviours
         private static Quaternion LoadQuaternion(IReadOnlyList<IVariable> parameters, int w, int x, int y, int z)
         {
             return new Quaternion(
-                YololValue.Number(parameters[w].Value),
                 YololValue.Number(parameters[x].Value),
                 YololValue.Number(parameters[y].Value),
-                YololValue.Number(parameters[z].Value)
+                YololValue.Number(parameters[z].Value),
+                YololValue.Number(parameters[w].Value)
             );
         }
 

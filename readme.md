@@ -221,11 +221,20 @@ Each function reads from some registers and then puts the result into some regis
  - `"reset"` - Set all registers to zero.
  - `"add"` - `a=sum(all_registers)`.
  - `"world_dir"` - Given a bearing (`a`), an elevation (`b`), a bearing axis (`cde`) and an elevation axis (`fgh`) calculate a world direction vector and store it into `abc`.
- - `"mulq"` - Multiply a quaternion (`abcd=WXYZ`) by a quaternion (`efgh=WXYZ`). Store result into `abcd`.
+ - `"mulqq"` - Multiply a quaternion (`abcd=WXYZ`) by a quaternion (`efgh=WXYZ`). Store result into `abcd`.
  - `"mulqv"` - Transform a vector (`efg=XYZ`) by a Quaternion (`abcd=WXYZ`). Store result into `efg`.
  - `"qaxisangle"` - Create a quaternion (`abcd=WXYZ`) from a rotation axis (`abc=XYZ`) and an angle (`d=degrees`).
- - `"qypr"` - Create a quaternion (`abcd=WXYZ`) from yaw, pitch and roll (`abc=YPR`) express in degrees.
+ - `"qypr"` - Create a quaternion (`abcd=WXYZ`) from yaw, pitch and roll (`abc=YPR`) expressed in degrees.
  - `"qinv"` - Invert a quaternion (`abcd=WXYZ`). Store result into `abcd`.
+ - `"dotvv"` - Calculate the dot product of a vector (`abc=XYZ`) and a vector (`efg=XYZ`). Store result into `d`.
+ - `"dotqq"` - Calculate the dot product of a quaternion (`abcd=WXYZ`) and a quaternion (`efgh=WXYZ`). Store result into `i`.
+ - `"crossvv"` - Calculate the cross product of a vector (`abc=XYZ`) and a vector (`fgh=XYZ`). Store result into `ijk=XYZ`.
+ - `"shuffle"` - Rearrange items in mathhelper registers. Takes a string in `mathhelper_z` and interprets each character as a command. e.g. `"cba01_def"` would:
+   - Copy registers `CBA` into registers `ABC`.
+   - Write numbers `0`/`1` into to registers `DE`
+   - Do nothing to `F`
+   - Copy registers `DEF` into registers `GHI`.
+   - All other registers remain unchanged.
 
 ## Constants
 
@@ -254,3 +263,6 @@ Various values are made available to code running on ships. These values are con
  - `:const_RadarMinAngle`
  - `:const_RadarMaxAngle`
  - `:const_MissileRefireTime`
+ - `:const_ShipLocalForwardX`
+ - `:const_ShipLocalForwardY`
+ - `:const_ShipLocalForwardZ`
