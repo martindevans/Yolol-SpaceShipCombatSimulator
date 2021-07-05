@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Myre.Entities;
 using Newtonsoft.Json;
 using ShipCombatCore.Simulation.Behaviours.Recording;
-using ShipCombatCore.Simulation.Report.Curves;
+using ShipCombatCore.Simulation.Entities;
 
 namespace ShipCombatCore.Simulation.Report
 {
@@ -28,10 +27,12 @@ namespace ShipCombatCore.Simulation.Report
 
         public override string ToString()
         {
+            // ReSharper disable HeapView.BoxingAllocation
             return $"Real Time Elapsed: {RealtimeDuration.TotalMilliseconds}ms\n" +
                    $"Recorded Entities ({_recordings.Count()}):\n" + 
                    $"Winner: {Winner?.ToString() ?? "Draw"}\n" +
                    string.Join("\n", _recordings.Select(r => $" - {r.ID} ({r.Type})"));
+            // ReSharper restore HeapView.BoxingAllocation
         }
 
         public void Dispose()
@@ -57,7 +58,7 @@ namespace ShipCombatCore.Simulation.Report
                             writer.WriteValue(recorder.ID);
 
                             writer.WritePropertyName("Type");
-                            writer.WriteValue(recorder.Type.ToString());
+                            writer.WriteValue(recorder.Type.ToEnumString());
 
                             var tn = recorder.Owner.GetProperty(PropertyNames.TeamName);
                             if (tn != null && !string.IsNullOrWhiteSpace(tn.Value))

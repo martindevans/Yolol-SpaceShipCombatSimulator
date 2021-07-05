@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using CommandLine;
@@ -100,6 +99,7 @@ namespace SpaceShipCombatSimulator
                 order++;
                 bytes /= 1024;
             }
+            // ReSharper disable once HeapView.BoxingAllocation
             return $"{bytes:0.##}{sizes[order]}";
         }
     }

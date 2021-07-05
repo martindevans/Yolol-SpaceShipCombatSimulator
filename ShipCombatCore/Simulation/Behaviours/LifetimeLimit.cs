@@ -1,8 +1,6 @@
-﻿using System.Numerics;
-using Myre.Collections;
+﻿using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
-using ShipCombatCore.Simulation.Entities;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {

@@ -55,6 +55,9 @@ namespace ShipCombatCore.Name
             "A Sufficiently Advanced Technology",
             "Worth The Wait",
             "Worth The Weight",
+            "That Sinking Feeling",
+            "Break A Leg",
+            "It's Not Rocket Science",
         };
 
         private static readonly IReadOnlyList<string> String1 = new[] {
@@ -152,7 +155,7 @@ namespace ShipCombatCore.Name
             var choice = random.NextDouble() * totalWeight;
             return choices.First(c => {
                 choice -= c.Item1;
-                return (choice <= 0);
+                return choice <= 0;
             }).Item2;
         }
 

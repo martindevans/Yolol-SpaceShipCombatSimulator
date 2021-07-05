@@ -31,7 +31,9 @@ namespace ShipCombatCore.Simulation.Services
 
             var timeMs = (int)TimeSpan.FromSeconds(_time).TotalMilliseconds;
 
+            // ReSharper disable HeapView.BoxingAllocation
             stream.WriteLine($"[{timeMs}ms] [{id}] {message}");
+            // ReSharper restore HeapView.BoxingAllocation
         }
     }
 }

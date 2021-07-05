@@ -1,11 +1,9 @@
-﻿using System;
-using System.Numerics;
-using MathHelperRedux;
+﻿using System.Numerics;
 using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using ShipCombatCore.Helpers;
 using Yolol.Execution;
-using Type = Yolol.Execution.Type;
 
 namespace ShipCombatCore.Simulation.Behaviours
 {
@@ -60,13 +58,9 @@ namespace ShipCombatCore.Simulation.Behaviours
             );
         }
 
-        private float GetNumber(IVariable? v)
+        private static float GetNumber(IVariable? v)
         {
-            if (v == null)
-                return 0;
-            if (v.Value.Type != Type.Number)
-                return 0;
-            return MathHelper.Clamp((float)v.Value.Number, -1, 1);
+            return YololValue.Number(v?.Value ?? (Number)0, -1, 1);
         }
 
         public class Manager

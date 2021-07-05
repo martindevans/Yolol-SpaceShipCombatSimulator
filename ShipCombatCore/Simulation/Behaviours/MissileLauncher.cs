@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Simulation.Entities;

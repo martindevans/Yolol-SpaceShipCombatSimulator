@@ -8,6 +8,7 @@ using Myre.Entities.Behaviours;
 using ShipCombatCore.Geometry;
 using ShipCombatCore.Helpers;
 using ShipCombatCore.Simulation.Behaviours.Recording;
+using ShipCombatCore.Simulation.Entities;
 using ShipCombatCore.Simulation.Report.Curves;
 using Yolol.Execution;
 
@@ -114,11 +115,17 @@ namespace ShipCombatCore.Simulation.Behaviours
                 // Find entities along the beam
                 _lastScanData = FindEntities(_direction.Value, angle.ToRadians());
 
+                // Apply the radar filter blacklist
                 var filterVal = ctx.Get(":radar_filter").Value;
                 if (filterVal.Type == Yolol.Execution.Type.String)
                 {
                     var filterString = filterVal.ToString();
-                    _lastScanData.RemoveAll(a => filterString.Contains(a.Detectable.Type.ToString()) || filterString.Contains(a.Detectable.ID));
+                    for (var i = _lastScanData.Count - 1; i >= 0; i--)
+                    {
+                        var item = _lastScanData[i];
+                        if (filterString.Contains(item.Detectable.Type.ToEnumString()) || filterString.Contains(item.Detectable.ID))
+                            _lastScanData.RemoveAt(i);
+                    }
                 }
             }
 
@@ -142,7 +149,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             {
                 var e = _lastScanData[idx];
                 id.Value = e.Detectable.ID;
-                type.Value = e.Detectable.Type.ToString();
+                type.Value = e.Detectable.Type.ToEnumString();
                 dist.Value = (Number)e.Dist;
                 _target.Value = e.Detectable.Position;
             }

@@ -107,6 +107,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                 _shellFactory = shellFactory;
                 _index = index;
 
+                // ReSharper disable HeapView.BoxingAllocation
                 _elevationName = $":tgt_gun_elevation_{_index}";
                 _bearingName = $":tgt_gun_bearing_{_index}";
                 _actualElevationName = $":gun_elevation_{_index}";
@@ -114,6 +115,7 @@ namespace ShipCombatCore.Simulation.Behaviours
                 _gunReadyName = $":gun_ready_{_index}";
                 _gunTriggerName = $":gun_trigger_{_index}";
                 _gunFuseName = $":gun_fuse_{_index}";
+                // ReSharper restore HeapView.BoxingAllocation
             }
 
             public void CreateProperties(Entity.ConstructionContext context)
@@ -124,8 +126,10 @@ namespace ShipCombatCore.Simulation.Behaviours
                 _velocity = context.CreateProperty(PropertyNames.Velocity);
                 _orientation = context.CreateProperty(PropertyNames.Orientation);
 
+                // ReSharper disable HeapView.BoxingAllocation
                 _bearing = context.CreateProperty(new Myre.TypedName<float>($"gun_turret_bearing_{_index}"));
                 _elevation = context.CreateProperty(new Myre.TypedName<float>($"gun_turret_elevation_{_index}"));
+                // ReSharper restore HeapView.BoxingAllocation
 
                 _bearingCurve = new BoundedFloat16PropertyCurve(_bearing);
                 _elevationCurve = new BoundedFloat16PropertyCurve(_elevation);
@@ -200,7 +204,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             private static float DeltaAngle(float current, float target)
             {
                 var num = Repeat(target - current, 360f);
-                if ((double) num > 180.0)
+                if (num > 180.0)
                     num -= 360f;
                 return num;
             }

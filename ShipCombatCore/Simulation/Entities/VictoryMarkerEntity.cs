@@ -1,5 +1,4 @@
-﻿using System;
-using Myre.Entities;
+﻿using Myre.Entities;
 using Ninject;
 using ShipCombatCore.Simulation.Behaviours;
 using ShipCombatCore.Simulation.Behaviours.Recording;
