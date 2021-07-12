@@ -65,6 +65,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public static Quaternion EulerXYZ(Vector3 xyz)
         {
+            xyz *= 0.5f;
+
             var s = new Vector3(MathF.Sin(xyz.X), MathF.Sin(xyz.Y), MathF.Sin(xyz.Z));
             var c = new Vector3(MathF.Cos(xyz.X), MathF.Cos(xyz.Y), MathF.Cos(xyz.Z));
 

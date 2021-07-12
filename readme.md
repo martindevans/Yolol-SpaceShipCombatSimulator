@@ -96,9 +96,9 @@ Measures the orientation and angular velocity. The forward vector of the ship ca
  - `:gyro_x` (**R**) - **x** component of quaternion.
  - `:gyro_y` (**R**) - **y** component of quaternion.
  - `:gyro_z` (**R**) - **z** component of quaternion.
- - `:angular_vel_x` (**R**) - **x** component of angular velocity.
- - `:angular_vel_y` (**R**) - **y** component of angular velocity.
- - `:angular_vel_z` (**R**) - **z** component of angular velocity.
+ - `:angular_vel_x` (**R**) - **x** component of angular velocity (radians/second * 10000).
+ - `:angular_vel_y` (**R**) - **y** component of angular velocity (radians/second * 10000).
+ - `:angular_vel_z` (**R**) - **z** component of angular velocity (radians/second * 10000).
 
 ### Positioning Device
 

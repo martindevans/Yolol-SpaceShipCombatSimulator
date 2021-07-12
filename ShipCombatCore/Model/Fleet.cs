@@ -38,6 +38,7 @@ namespace ShipCombatCore.Model
             try
             {
                 archive.ExtractToDirectory(tmp.FullName);
+
                 var subdir = Directory.GetDirectories(tmp.FullName).FirstOrDefault();
                 if (subdir == null)
                     return null;
