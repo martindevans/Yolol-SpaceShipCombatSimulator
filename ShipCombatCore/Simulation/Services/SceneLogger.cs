@@ -29,6 +29,14 @@ namespace ShipCombatCore.Simulation.Services
             if (!_streams.TryGetValue(team, out var stream))
                 return;
 
+            Log(team, id, message.ToString());
+        }
+
+        public void Log(uint team, string id, string message)
+        {
+            if (!_streams.TryGetValue(team, out var stream))
+                return;
+
             var timeMs = (int)TimeSpan.FromSeconds(_time).TotalMilliseconds;
 
             // ReSharper disable HeapView.BoxingAllocation

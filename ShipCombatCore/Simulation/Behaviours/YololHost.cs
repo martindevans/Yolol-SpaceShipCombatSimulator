@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Myre.Collections;
 using Myre.Entities;
 using Myre.Entities.Behaviours;
+using ShipCombatCore.Simulation.Services;
 using Yolol.Execution;
 using Yolol.Grammar.AST;
 using Yolol.IL;
@@ -14,7 +16,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 {
     public class YololContext
     {
-        private const int MaxStringLength = 10000;
+        private const int MaxStringLength = 25000;
         private const int MaxMemoryUsage = 1000000;
 
         private class CompiledProgramState
@@ -22,6 +24,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             private readonly CompiledProgram _compiled;
 
             public Value[] Internals { get; }
+            public IReadonlyInternalsMap InternalsMap => _compiled.InternalsMap;
 
             private CompiledProgramState(CompiledProgram compiled)
             {
@@ -66,15 +69,15 @@ namespace ShipCombatCore.Simulation.Behaviours
             Constants.SetConstants(this);
         }
 
-        public void Tick()
+        public void Tick(Action<string> log)
         {
             foreach (var state in _compiled)
                 state.Tick(_externals);
 
             // Check memory usage of externals. Trim strings which are over the max length limit
             var memory = 0;
-            for (var i = 0; i < _externals.Length; i++)
-                memory += CheckMemory(ref _externals[i]);
+            foreach (var (name, index) in _externalsMap)
+                memory += CheckMemory(ref _externals[index], name, log);
 
             // Check memory usage of internals of each chip. Trim string which are over the limit.
             var maxMemChipIdx = -1;
@@ -82,8 +85,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             for (var c = 0; c < _compiled.Count; c++)
             {
                 var m = 0;
-                for (var i = 0; i < _compiled[c].Internals.Length; i++)
-                    m += CheckMemory(ref _compiled[c].Internals[i]);
+                var prog = _compiled[c];
+                foreach (var (name, index) in prog.InternalsMap)
+                    m += CheckMemory(ref prog.Internals[index], name, log);
+
                 memory += m;
                 if (m > maxMemChipUsage)
                 {
@@ -94,15 +99,19 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             // If total ship memory usage is over the limit delete the chip using the most memory
             if (memory > MaxMemoryUsage && maxMemChipIdx >= 0)
+            {
+                log("Total memory over limit! Deleting chip using the most memory");
                 _compiled.RemoveAt(maxMemChipIdx);
+            }
         }
 
-        private static int CheckMemory(ref Value value)
+        private static int CheckMemory(ref Value value, string name, Action<string> log)
         {
             if (value.Type == Yolol.Execution.Type.String)
             {
                 if (value.String.Length > MaxStringLength)
                 {
+                    log($"String `{name}` over max length ({MaxStringLength})! Setting `{name}=\"\"`.");
                     value = "";
                     return 0;
                 }
@@ -184,24 +193,44 @@ namespace ShipCombatCore.Simulation.Behaviours
     public class YololHost
         : ProcessBehaviour
     {
-        private Property<YololContext>? _context;
-        private Property<string>? _name;
+#pragma warning disable 8618
+        private Property<YololContext> _context;
+        private Property<string> _name;
+        private Property<uint> _team;
+        private Property<string> _id;
+#pragma warning restore 8618
 
+        private SceneLogger? _logger;
+        
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _context = context.CreateProperty(PropertyNames.YololContext);
             _name = context.CreateProperty(PropertyNames.UniqueName);
+            _team = context.CreateProperty(PropertyNames.TeamOwner);
+            _id = context.CreateProperty(PropertyNames.UniqueName);
 
             base.CreateProperties(context);
         }
 
+        public override void Initialise(INamedDataProvider? initialisationData)
+        {
+            base.Initialise(initialisationData);
+
+            _logger = Owner.Scene?.GetService<SceneLogger>();
+        }
+
+        private void Log(string value)
+        {
+            _logger?.Log(_team.Value, _id.Value ?? "", value);
+        }
+
         protected override void Update(float elapsedTime)
         {
-            var name = _context?.Value?.Get(":name");
-            if (name != null && _name?.Value != null)
+            var name = _context.Value?.Get(":name");
+            if (name != null && _name.Value != null)
                 name.Value = _name.Value;
 
-            _context?.Value?.Tick();
+            _context.Value?.Tick(Log);
         }
 
         public class Manager
