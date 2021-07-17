@@ -12,10 +12,10 @@ namespace ShipCombatCore.Simulation.Behaviours
         private Property<YololContext> _context;
 #pragma warning restore 8618
 
-        private double _elapsed;
-
         private IVariable? _clock;
         private IVariable? _clockDt;
+
+        public double Time { get; private set; }
 
         public override void CreateProperties(Entity.ConstructionContext context)
         {
@@ -26,13 +26,14 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         protected override void Update(float elapsedTime)
         {
+            Time += elapsedTime;
+
             var ctx = _context.Value;   
             if (ctx == null)
                 return;
 
             _clock ??= ctx.Get(":clock");
-            _elapsed += elapsedTime;
-            _clock.Value = (Number)_elapsed;
+            _clock.Value = (Number)Time;
 
             _clockDt ??= ctx.Get(":clock_dt");
             _clockDt.Value = (Number)elapsedTime;

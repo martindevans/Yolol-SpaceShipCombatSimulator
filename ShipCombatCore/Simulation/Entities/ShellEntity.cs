@@ -20,6 +20,7 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<LifetimeLimit>();
             AddBehaviour<DamageInstantlyKills>();
             AddBehaviour<ExplodeOnDeath>();
+            AddBehaviour<ClockDevice>();
 
             // Physics
             AddBehaviour<Integrate>();

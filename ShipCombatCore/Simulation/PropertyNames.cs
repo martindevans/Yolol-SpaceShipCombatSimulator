@@ -42,6 +42,7 @@ namespace ShipCombatCore.Simulation
 
         public static readonly TypedName<float> DamageSphereAmount = new("damage_sphere_amount");
         public static readonly TypedName<float> DamageSphereRange = new("damage_sphere_range");
+        public static readonly TypedName<float> SafetyTime = new("self_destruct_safety_time");
 
         public static readonly TypedName<uint> MissileLauncherAmmo = new("missile_launcher_ammo");
 
