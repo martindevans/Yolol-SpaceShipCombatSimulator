@@ -39,6 +39,9 @@ namespace ShipCombatCore.Simulation
         public const float ShipLocalForwardY = 0;
         public const float ShipLocalForwardZ = -1;
 
+        public const float ShipBaseMass = 3000;
+        public const float MissileBaseMass = 100;
+
         public static void SetConstants(YololContext ctx)
         {
             var fields = typeof(Constants).GetFields(BindingFlags.Public | BindingFlags.Static);

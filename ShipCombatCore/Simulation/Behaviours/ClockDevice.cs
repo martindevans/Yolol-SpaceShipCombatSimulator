@@ -1,4 +1,5 @@
-﻿using Myre.Entities;
+﻿using System;
+using Myre.Entities;
 using Myre.Entities.Behaviours;
 using Yolol.Execution;
 
@@ -36,7 +37,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             _clock.Value = (Number)Time;
 
             _clockDt ??= ctx.Get(":clock_dt");
-            _clockDt.Value = (Number)elapsedTime;
+            _clockDt.Value = (Number)Math.Round(elapsedTime, 3);
         }
 
         public class Manager

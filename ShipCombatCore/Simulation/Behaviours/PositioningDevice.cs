@@ -44,7 +44,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             if (!_initialPosition.HasValue)
                 _initialPosition = _position.Value;
 
-            var acceleration = _velocity.Value - _prevVel;
+            var acceleration = (_velocity.Value - _prevVel) / elapsedTime;
             _prevVel = _velocity.Value;
             
             var ctx = _context.Value;   

@@ -130,9 +130,9 @@ Pushes the entity forward and consumes fuel.
 
 The space ships and the missiles use momentum wheels to turn in place without using fuel.
 
- - `:torque_x` (**R**) - A value from -1 to 1 indicating how much torque to apply around the X axis.
- - `:torque_y` (**R**) - A value from -1 to 1 indicating how much torque to apply around the Y axis.
- - `:torque_z` (**R**) - A value from -1 to 1 indicating how much torque to apply around the Z axis.
+ - `:torque_x` (**W**) - A value from -1 to 1 indicating how much torque to apply around the X axis.
+ - `:torque_y` (**W**) - A value from -1 to 1 indicating how much torque to apply around the Y axis.
+ - `:torque_z` (**W**) - A value from -1 to 1 indicating how much torque to apply around the Z axis.
 
 ### Turret
 
@@ -266,3 +266,5 @@ Various values are made available to code running on ships. These values are con
  - `:const_ShipLocalForwardX`
  - `:const_ShipLocalForwardY`
  - `:const_ShipLocalForwardZ`
+ - `:const_ShipBaseMass`
+ - `:const_MissileBaseMass`

@@ -72,7 +72,7 @@ namespace ShipCombatCore.Simulation.Entities
             e.GetProperty(PropertyNames.Orientation)!.Value = orientation;
             e.GetProperty(PropertyNames.AngularVelocity)!.Value = angularVelocity;
 
-            e.GetProperty(PropertyNames.ExtraMass)!.Value = 3000f;
+            e.GetProperty(PropertyNames.ExtraMass)!.Value = Constants.ShipBaseMass;
 
             e.GetProperty(PropertyNames.YololContext)!.Value = new YololContext(programs);
 

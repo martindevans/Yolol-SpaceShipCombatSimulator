@@ -61,7 +61,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
             e.GetProperty(PropertyNames.Velocity)!.Value = velocity;
-            e.GetProperty(PropertyNames.ExtraMass)!.Value = 100f;
+            e.GetProperty(PropertyNames.ExtraMass)!.Value = Constants.MissileBaseMass;
 
             e.GetProperty(PropertyNames.Orientation)!.Value = orientation;
             e.GetProperty(PropertyNames.AngularVelocity)!.Value = angularVelocity;
