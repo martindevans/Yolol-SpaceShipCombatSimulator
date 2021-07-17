@@ -21,6 +21,7 @@ namespace ShipCombatCore.Simulation.Entities
             // Physics
             AddBehaviour<Integrate>();
             AddBehaviour<ExtraMass>();
+            AddProperty(PropertyNames.ExtraMass, Constants.MissileBaseMass);
             AddBehaviour<RadarDetectable>();
 
             // Collision
@@ -39,8 +40,12 @@ namespace ShipCombatCore.Simulation.Entities
             AddBehaviour<GyroscopeDevice>();
             AddBehaviour<PositioningDevice>();
             AddBehaviour<FuelTank>();
+            AddProperty(PropertyNames.FuelLitersInTank, 15);
             AddBehaviour<Engine>();
+            AddProperty(PropertyNames.FuelConsumptionRate, Constants.MissileFuelConsumption);
+            AddProperty(PropertyNames.MaxEngineForce, Constants.MissileThrust);
             AddBehaviour<MomentumWheels>();
+            AddProperty(PropertyNames.MaxWheelTorque, Constants.MissileWheelTorque);
             AddBehaviour<FixedActiveRadarScannerDevice>();
             AddBehaviour<Radio>();
             AddBehaviour<MathHelperDevice>();
@@ -61,16 +66,11 @@ namespace ShipCombatCore.Simulation.Entities
 
             e.GetProperty(PropertyNames.Position)!.Value = position;
             e.GetProperty(PropertyNames.Velocity)!.Value = velocity;
-            e.GetProperty(PropertyNames.ExtraMass)!.Value = Constants.MissileBaseMass;
 
             e.GetProperty(PropertyNames.Orientation)!.Value = orientation;
             e.GetProperty(PropertyNames.AngularVelocity)!.Value = angularVelocity;
 
             e.GetProperty(PropertyNames.YololContext)!.Value = new YololContext(new[] { program });
-
-            e.GetProperty(PropertyNames.FuelLitersInTank)!.Value = 15;
-            e.GetProperty(PropertyNames.FuelConsumptionRate)!.Value = Constants.MissileFuelConsumption;
-            e.GetProperty(PropertyNames.MaxEngineForce)!.Value = Constants.MissileThrust;
 
             return e;
         }

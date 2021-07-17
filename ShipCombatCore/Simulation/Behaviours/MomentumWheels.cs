@@ -34,13 +34,6 @@ namespace ShipCombatCore.Simulation.Behaviours
             base.CreateProperties(context);
         }
 
-        public override void Initialise(INamedDataProvider? initialisationData)
-        {
-            _maxWheelTorque.Value = initialisationData?.GetValue(PropertyNames.MaxWheelTorque) ?? 0.2f;
-
-            base.Initialise(initialisationData);
-        }
-
         protected override void Update(float elapsedTime)
         {
             var ctx = _context.Value;

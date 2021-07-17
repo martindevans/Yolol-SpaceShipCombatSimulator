@@ -42,6 +42,9 @@ namespace ShipCombatCore.Simulation
         public const float ShipBaseMass = 3000;
         public const float MissileBaseMass = 100;
 
+        public const float MissileWheelTorque = 0.2f;
+        public const float ShipWheelTorque = 0.2f;
+
         public static void SetConstants(YololContext ctx)
         {
             var fields = typeof(Constants).GetFields(BindingFlags.Public | BindingFlags.Static);

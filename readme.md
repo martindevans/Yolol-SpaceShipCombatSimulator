@@ -268,3 +268,5 @@ Various values are made available to code running on ships. These values are con
  - `:const_ShipLocalForwardZ`
  - `:const_ShipBaseMass`
  - `:const_MissileBaseMass`
+ - `:const_ShipWheelTorque`
+ - `:const_MissileWheelTorque`
