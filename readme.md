@@ -208,6 +208,18 @@ The space ship is fitted with a black box that stores the captains log. This log
 
  - `:log` (**W**) - String to write to the log.
 
+### Debug Sphere
+
+The ship can draw a sphere in space (only when running the sim locally, will not be visible in online replays). This can be useful for debugging.
+
+ - `:debug_sphere_pos_x` (**W**) - X pos of sphere.
+ - `:debug_sphere_pos_y` (**W**) - Y pos of sphere.
+ - `:debug_sphere_pos_z` (**W**) - Z pos of sphere.
+ - `:debug_sphere_rad` (**W**) - Radius of sphere.
+ - `:debug_sphere_r` (**W**) - Red component of colour (0 to 1).
+ - `:debug_sphere_g` (**W**) - Green component of colour (0 to 1).
+ - `:debug_sphere_b` (**W**) - Blue component of colour (0 to 1).
+
 ### Math Helper
 
 Spaceships and missiles are fitted with an accelerator for calculating certain mathematical functions. The device has several registers (`:mathhelper_a`, `:mathhelper_b` etc) and a mode register. When the mode is set the device will perform a calculation on the other registers and then set the mode to an empty string.
