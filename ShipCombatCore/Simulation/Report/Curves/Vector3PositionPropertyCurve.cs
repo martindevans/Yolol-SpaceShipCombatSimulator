@@ -14,7 +14,7 @@ namespace ShipCombatCore.Simulation.Report.Curves
     //    private readonly BoundedFloat32Curve _y;
     //    private readonly BoundedFloat32Curve _z;
 
-    //    public Vector3PositionPropertyCurve(Property<Vector3> property)
+    //    public Vector3PositionPropertyElementCurve(Property<Vector3> property)
     //    {
     //        _property = property;
 

@@ -60,11 +60,12 @@ namespace ShipCombatCore.Simulation.Report
                             writer.WritePropertyName("Type");
                             writer.WriteValue(recorder.Type.ToEnumString());
 
-                            var tn = recorder.Owner.GetProperty(PropertyNames.TeamName);
-                            if (tn != null && !string.IsNullOrWhiteSpace(tn.Value))
+                            if (recorder.TeamId != null && recorder.TeamName != null)
                             {
+                                writer.WritePropertyName("TeamId");
+                                writer.WriteValue(recorder.TeamId);
                                 writer.WritePropertyName("TeamName");
-                                writer.WriteValue(tn.Value);
+                                writer.WriteValue(recorder.TeamName);
                             }
 
                             writer.WritePropertyName("Curves");

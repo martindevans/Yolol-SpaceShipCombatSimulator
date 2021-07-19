@@ -17,12 +17,16 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
         public string ID { get; set; }
 #pragma warning restore 8618
 
-        public EntityType Type { get; set; }
+        public EntityType Type { get; private set; }
+        public uint? TeamId { get; private set; }
+        public string? TeamName { get; private set; }
 
         public override void Initialise(INamedDataProvider? initialisationData)
         {
             ID = Owner.GetProperty(PropertyNames.UniqueName)?.Value ?? throw new InvalidOperationException("Recorded entity does not have unique ID");
             Type = Owner.GetProperty(PropertyNames.EntityType)?.Value ?? throw new InvalidOperationException("Recorded entity does not have entity type");
+            TeamId = Owner.GetProperty(PropertyNames.TeamOwner)?.Value;
+            TeamName = Owner.GetProperty(PropertyNames.TeamName)?.Value;
 
             base.Initialise(initialisationData);
         }

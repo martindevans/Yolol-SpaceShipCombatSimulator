@@ -101,7 +101,7 @@ namespace ShipCombatCore.Simulation
 
             var names = new HashSet<string>();
             BuildFleet(scene, _team0, _name0, 0, new Vector3(0, 0, 5000), Quaternion.Identity, r, names);
-            BuildFleet(scene, _team1, _name0, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
+            BuildFleet(scene, _team1, _name1, 1, new Vector3(0, 0, -5000), Quaternion.CreateFromAxisAngle(Vector3.UnitY, MathHelper.Pi), r, names);
 
             return scene;
         }

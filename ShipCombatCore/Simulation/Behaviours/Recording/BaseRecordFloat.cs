@@ -11,7 +11,7 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
     {
 #pragma warning disable 8618
         private Property<float> _property;
-        private FloatPropertyCurve _curve;
+        private BoundedFloat16PropertyCurve _curve;
 #pragma warning restore 8618
 
         protected abstract TypedName<float> PropertyName { get; }
@@ -19,7 +19,7 @@ namespace ShipCombatCore.Simulation.Behaviours.Recording
         public override void CreateProperties(Entity.ConstructionContext context)
         {
             _property = context.CreateProperty(PropertyName);
-            _curve = new FloatPropertyCurve(_property);
+            _curve = new BoundedFloat16PropertyCurve(_property);
 
             base.CreateProperties(context);
         }

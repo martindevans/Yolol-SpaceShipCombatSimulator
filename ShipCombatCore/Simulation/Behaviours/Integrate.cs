@@ -53,10 +53,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             foreach (var item in _massProviders)
                 _mass.Value += Math.Max(0, item.Mass);
 
-            _velocity.Value += _force.Value / _mass.Value * elapsedTime;
+            _velocity.Value += elapsedTime * _force.Value / _mass.Value;
             _force.Value = Vector3.Zero;
 
-            _angularVelocity.Value += _torque.Value / _mass.Value;
+            _angularVelocity.Value += elapsedTime * _torque.Value / _mass.Value;
             _torque.Value = Vector3.Zero;
 
             _position.Value += _velocity.Value * elapsedTime;
