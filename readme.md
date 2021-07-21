@@ -71,6 +71,10 @@ Certain fields are read-only (**R**), other fields are write-only (**W**), some 
  - [Radio](#radio)
  - [Math Helper](#math-helper)
 
+### Name
+
+Every ship and missile has a unique ID. A ship/missile can read it's own name from the `:name` field.
+
 ### Yolol Chip
 
 The Yolol chip device runs a Yolol script, line by line. On ships every chip is run every single tick. On missiles there is just one chip.
