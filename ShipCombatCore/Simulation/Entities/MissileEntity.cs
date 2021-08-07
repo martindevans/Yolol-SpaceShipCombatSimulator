@@ -26,7 +26,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             // Collision
             AddBehaviour<SphereColliderSecondary>();
-            AddProperty(PropertyNames.SphereRadius, 2);
+            AddProperty(PropertyNames.SphereRadius, Constants.MissileRadius);
 
             // Explode after taking any significant damage
             AddBehaviour<CosmicRadiationDamage>();

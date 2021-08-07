@@ -26,7 +26,7 @@ namespace ShipCombatCore.Simulation.Entities
 
             // Collision
             AddBehaviour<SphereColliderSecondary>();
-            AddProperty(PropertyNames.SphereRadius, 30);
+            AddProperty(PropertyNames.SphereRadius, Constants.ShipRadius);
 
             // Damage
             AddBehaviour<DamageRemovesFuel>();

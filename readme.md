@@ -106,7 +106,7 @@ Measures the orientation and angular velocity. The forward vector of the ship ca
 
 ### Positioning Device
 
-Measures the acceleration, velocity and position. Position starts off at `(0,0,0)` wherever the entity is first created.
+Measures the acceleration, velocity and position. The origin `(0,0,0)` is in the middle of the battlefield. 
 
  - `:accel_x` (**R**) - **x** component of acceleration.
  - `:accel_y` (**R**) - **y** component of acceleration.
