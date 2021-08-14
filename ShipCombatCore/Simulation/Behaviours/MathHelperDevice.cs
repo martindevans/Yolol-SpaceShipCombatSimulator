@@ -80,14 +80,18 @@ namespace ShipCombatCore.Simulation.Behaviours
                 "shuffle" => Shuffle,
                 "add" => Add,
                 "world_dir" => WorldDir,
-                "mulqq" or "mulq" => MulQuatQuat,
+                
                 "mulqv" => MulQuatVec,
+
+                "mulqq" or "mulq" => MulQuatQuat,
                 "qaxisangle" => QuatAxisAngle,
                 "qypr" => QuatYPR,
                 "qinv" => QuatInv,
+                "dotqq" => DotQuatQuat,
+
                 "dotvv" => DotVecVec,
                 "crossvv" => CrossVecVec,
-                "dotqq" => DotQuatQuat,
+
                 _ => _ => { },
             };
             func(_params);
@@ -112,12 +116,13 @@ namespace ShipCombatCore.Simulation.Behaviours
             {
                 if (char.IsLetter(character))
                 {
-                    // If it's a letter copy that item into this slot
+                    // It's a letter - copy that register into this one
                     var idx = char.ToLowerInvariant(character) - 97;
                     temp[index] = parameters[idx].Value;
                 }
                 else if (char.IsDigit(character))
                 {
+                    // It's a digit - put that number into this register
                     var val = character - 48;
                     temp[index] = (Number)val;
                 }

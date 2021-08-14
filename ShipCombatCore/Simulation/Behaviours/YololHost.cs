@@ -41,7 +41,7 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             public static CompiledProgramState Compile(Program program, ExternalsMap externalsMap)
             {
-                return new CompiledProgramState(program.Compile(externalsMap, program.Lines.Count));
+                return new CompiledProgramState(program.Compile(externalsMap, program.Lines.Count, maxStringLength: MaxStringLength));
             }
         }
 
@@ -76,8 +76,8 @@ namespace ShipCombatCore.Simulation.Behaviours
 
             // Check memory usage of externals. Trim strings which are over the max length limit
             var memory = 0;
-            foreach (var (name, index) in _externalsMap)
-                memory += CheckMemory(ref _externals[index], name, log);
+            foreach (var (_, index) in _externalsMap)
+                memory += CheckMemory(ref _externals[index]);
 
             // Check memory usage of internals of each chip. Trim string which are over the limit.
             var maxMemChipIdx = -1;
@@ -86,8 +86,8 @@ namespace ShipCombatCore.Simulation.Behaviours
             {
                 var m = 0;
                 var prog = _compiled[c];
-                foreach (var (name, index) in prog.InternalsMap)
-                    m += CheckMemory(ref prog.Internals[index], name, log);
+                foreach (var (_, index) in prog.InternalsMap)
+                    m += CheckMemory(ref prog.Internals[index]);
 
                 memory += m;
                 if (m > maxMemChipUsage)
@@ -105,19 +105,10 @@ namespace ShipCombatCore.Simulation.Behaviours
             }
         }
 
-        private static int CheckMemory(ref Value value, string name, Action<string> log)
+        private static int CheckMemory(ref Value value)
         {
             if (value.Type == Yolol.Execution.Type.String)
-            {
-                if (value.String.Length > MaxStringLength)
-                {
-                    log($"String `{name}` over max length ({MaxStringLength})! Setting `{name}=\"\"`.");
-                    value = "";
-                    return 0;
-                }
-                else
-                    return value.String.Length;
-            }
+                return value.String.Length;
             else
                 return 1;
         }

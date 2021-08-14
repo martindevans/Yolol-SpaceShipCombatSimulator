@@ -7,9 +7,13 @@ ShipCombatCore/bin
 ShipCombatCore/obj
 ShipCombatCore/Properties/launchSettings.json
 
+SpaceCombatCore.Tests/bin
+SpaceCombatCore.Tests/obj
+
 SpaceShipCombatSimulator/bin
 SpaceShipCombatSimulator/obj
 SpaceShipCombatSimulator/Properties/launchSettings.json
 /ShipCombatCore/push-all.ps1
 /*.ncrunchsolution
 /_NCrunch_SpaceShipCombatSimulator/*.cache
+

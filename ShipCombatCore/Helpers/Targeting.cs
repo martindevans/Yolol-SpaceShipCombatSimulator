@@ -13,10 +13,5 @@ namespace ShipCombatCore.Helpers
 
             return Vector3.Transform(fwd, shipOrientation * bq * eq);
         }
-
-        public static Vector3 WorldDirection(float elevation, float bearing, Quaternion shipOrientation)
-        {
-            return WorldDirection(elevation, new Vector3(0, 0, -1), bearing, new Vector3(1, 0, 0), shipOrientation);
-        }
     }
 }

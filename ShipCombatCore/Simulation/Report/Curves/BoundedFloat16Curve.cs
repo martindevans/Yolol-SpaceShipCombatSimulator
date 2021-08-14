@@ -29,8 +29,8 @@ namespace ShipCombatCore.Simulation.Report.Curves
         {
             KeyFrameReduction();
 
-            var max = Keyframes.Select(a => a.Value).Max();
-            var min = Keyframes.Select(a => a.Value).Min();
+            var max = Keyframes.Select(a => a.Value).Append(float.MinValue).Max();
+            var min = Keyframes.Select(a => a.Value).Append(float.MaxValue).Min();
             if (Math.Abs(max - min) < float.Epsilon)
                 max += 1;
             var range = max - min;
