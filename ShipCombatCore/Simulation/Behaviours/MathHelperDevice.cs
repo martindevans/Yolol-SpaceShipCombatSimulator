@@ -177,7 +177,7 @@ namespace ShipCombatCore.Simulation.Behaviours
         private static void QuatAxisAngle(IReadOnlyList<IVariable> parameters)
         {
             var v = LoadVector3(parameters, 0, 1, 2);
-            var a = LoadSingle(parameters, 4);
+            var a = LoadSingle(parameters, 3);
 
             var q = Quaternion.CreateFromAxisAngle(v, a.ToRadians());
 

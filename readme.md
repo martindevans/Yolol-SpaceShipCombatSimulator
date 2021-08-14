@@ -244,7 +244,7 @@ Each function reads from some registers and then puts the result into some regis
  - `"qinv"` - Invert a quaternion (`abcd=WXYZ`). Store result into `abcd`.
  - `"dotvv"` - Calculate the dot product of a vector (`abc=XYZ`) and a vector (`efg=XYZ`). Store result into `d`.
  - `"dotqq"` - Calculate the dot product of a quaternion (`abcd=WXYZ`) and a quaternion (`efgh=WXYZ`). Store result into `i`.
- - `"crossvv"` - Calculate the cross product of a vector (`abc=XYZ`) and a vector (`fgh=XYZ`). Store result into `ijk=XYZ`.
+ - `"crossvv"` - Calculate the cross product of a vector (`abc=XYZ`) and a vector (`efg=XYZ`). Store result into `ijk=XYZ`.
  - `"shuffle"` - Rearrange items in mathhelper registers. Takes a string in `mathhelper_z` and interprets each character as a command. e.g. `"cba01_def"` would:
    - Copy registers `CBA` into registers `ABC`.
    - Write numbers `0`/`1` into to registers `DE`
