@@ -7,6 +7,7 @@ using Myre.Entities;
 using Myre.Entities.Behaviours;
 using ShipCombatCore.Simulation.Services;
 using Yolol.Execution;
+using Yolol.Grammar;
 using Yolol.Grammar.AST;
 using Yolol.IL;
 using Yolol.IL.Compiler;
@@ -49,7 +50,8 @@ namespace ShipCombatCore.Simulation.Behaviours
         private readonly ExternalsMap _externalsMap;
         private readonly Value[] _externals;
 
-        private readonly Dictionary<string, IVariable> _cache = new();
+        private readonly Dictionary<string, VariableName> _nameCache = new();
+        private readonly Dictionary<VariableName, IVariable> _cache = new();
 
         private readonly List<CompiledProgramState> _compiled;
 
@@ -115,10 +117,18 @@ namespace ShipCombatCore.Simulation.Behaviours
 
         public IVariable Get(string name)
         {
-            if (!name.StartsWith(":"))
-                throw new ArgumentException($"`{name}` is not an external variable");
+            if (!_nameCache.TryGetValue(name, out var n))
+            {
+                n = new VariableName(name);
+                _nameCache[name] = n;
+            }
+            return Get(n);
+        }
 
-            name = name.ToLowerInvariant();
+        public IVariable Get(VariableName name)
+        {
+            if (!name.IsExternal)
+                throw new ArgumentException($"`{name}` is not an external variable");
 
             if (!_cache.TryGetValue(name, out var v))
             {
@@ -128,7 +138,7 @@ namespace ShipCombatCore.Simulation.Behaviours
             return v;
         }
 
-        private IVariable ConstructVariable(string name)
+        private IVariable ConstructVariable(VariableName name)
         {
             return _externalsMap.TryGetValue(name, out var idx)
                   ? new ArrayYololVariable(_externals, idx)
@@ -168,11 +178,11 @@ namespace ShipCombatCore.Simulation.Behaviours
         private class StandaloneYololVariable
             : IVariable
         {
-            [UsedImplicitly] private readonly string _name;
+            [UsedImplicitly] private readonly VariableName _name;
 
             public Value Value { get; set; }
 
-            public StandaloneYololVariable(string name)
+            public StandaloneYololVariable(VariableName name)
             {
                 _name = name;
                 Value = Number.Zero;
