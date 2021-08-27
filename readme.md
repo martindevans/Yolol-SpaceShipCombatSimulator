@@ -274,6 +274,10 @@ Various values are made available to code running on ships. These values are con
  - `:const_TurretMaxFuse`
  - `:const_TurretShellSpeed`
  - `:const_TurretRefireTime`
+ - `:const_MissileRadarMinRange`
+ - `:const_MissileRadarMaxRange`
+ - `:const_MissileRadarMinAngle`
+ - `:const_MissileRadarMaxAngle`
  - `:const_RadarMinRange`
  - `:const_RadarMaxRange`
  - `:const_RadarMinAngle`
@@ -286,3 +290,5 @@ Various values are made available to code running on ships. These values are con
  - `:const_MissileBaseMass`
  - `:const_ShipWheelTorque`
  - `:const_MissileWheelTorque`
+ - `:const_ShipRadius`
+ - `:const_MissileRadius`
