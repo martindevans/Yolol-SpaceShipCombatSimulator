@@ -71,6 +71,19 @@ namespace ShipCombatCore.Simulation.Behaviours
             base.CreateProperties(context);
         }
 
+        protected override void Initialised()
+        {
+            base.Initialised();
+
+            var ctx = _context.Value;
+            if (ctx != null)
+                Initialised(ctx);
+        }
+
+        protected virtual void Initialised(YololContext ctx)
+        {
+        }
+
         public void Record(uint ms)
         {
             _directionCurve.Extend(ms);

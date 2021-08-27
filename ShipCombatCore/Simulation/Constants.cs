@@ -9,7 +9,7 @@ namespace ShipCombatCore.Simulation
         public const float SpaceShipThrust = 5000;
         public const float SpaceShipFuelConsumption = 3;
 
-        public const float MissileThrust = 5000;
+        public const float MissileThrust = 6000;
         public const float MissileFuelConsumption = 1;
 
         public const float TurretMinElevation = 0;
@@ -27,9 +27,13 @@ namespace ShipCombatCore.Simulation
         public const float TurretElevationAxisY = 0;
         public const float TurretElevationAxisZ = -1;
 
+        public const float MissileRadarMinRange = 20;
+        public const float MissileRadarMaxRange = 5000;
+        public const float MissileRadarMinAngle = 1;
+        public const float MissileRadarMaxAngle = 30;
+
         public const float RadarMinRange = 20;
         public const float RadarMaxRange = 20000;
-
         public const float RadarMinAngle = 1;
         public const float RadarMaxAngle = 90;
 
@@ -42,7 +46,7 @@ namespace ShipCombatCore.Simulation
         public const float ShipBaseMass = 3000;
         public const float MissileBaseMass = 100;
 
-        public const float MissileWheelTorque = 20f;
+        public const float MissileWheelTorque = 30f;
         public const float ShipWheelTorque = 20f;
 
         public const float ShipRadius = 30;
