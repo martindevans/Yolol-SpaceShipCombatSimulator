@@ -60,7 +60,7 @@ namespace ShipCombatCore.Simulation
             {
                 var variable = ctx.Get($":const_{field.Name}");
 
-                var value = field.GetValue(null);
+                var value = field.GetValue(null)!;
 
                 if (field.FieldType == typeof(float))
                     variable.Value = (Number)(float)value;
